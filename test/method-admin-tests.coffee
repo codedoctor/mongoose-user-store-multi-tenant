@@ -1,14 +1,12 @@
-should = require 'should'
-helper = require './support/helper'
 _ = require 'underscore'
-mongoose = require 'mongoose'
-ObjectId = mongoose.Types.ObjectId
+should = require 'should'
 
-sampleUsers = null
+helper = require './support/helper'
 mongoHelper = require './support/mongo-helper'
 
-describe 'testing admin', ->
+sampleUsers = null
 
+describe 'testing admin functions', ->
   before (cb) ->
     helper.start null, cb
 
@@ -24,14 +22,6 @@ describe 'testing admin', ->
         name : "role1"
         description: "desc1"
         isInternal : false
-
-
-      scopes = [
-        {"name": "read", "description": "Allows read access to your data.", "developerDescription": "", "roles": ["public"]},
-        {"name": "write", "description": "Allows write access to your data.", "developerDescription": "", "roles": ["public"]},
-        {"name": "email", "description": "Allows access to your email address.", "developerDescription": "", "roles": ["public"]},
-        {"name": "admin", "description": "Allows full admin access to the platform.", "developerDescription": "", "roles": ["admin"]}
-      ]
 
       helper.store.admin.setup helper._tenantId,"martin","password1","martin@wawrusch.com",null,{}, (err,user) ->
         return cb err if err
