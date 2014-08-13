@@ -1,0 +1,9 @@
+#!/bin/bash
+
+BASEDIR=$(dirname $0)
+echo $BASEDIR
+pushd $BASEDIR/..
+
+./node_modules/.bin/grunt release
+
+popd

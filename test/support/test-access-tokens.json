@@ -1,0 +1,5 @@
+[
+{"token": "tk-no-scopes", "scopes" : []},
+{"token": "tk-server-admin", "scopes" : ["server-admin"]},
+{"token": "tk-server-access", "scopes" : ["server-access"]},
+{"token": "tk-token-validator", "scopes" : ["token-validator"]}]

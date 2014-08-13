@@ -1,0 +1,85 @@
+{
+  "author": "Martin Wawrusch <martin@wawrusch.com> (http://martinatsunset.com)",
+  "name": "mongoose-identity-store-multi-tenant",
+  "description": "A bunch of mongoose schemas to implement identity management (users, accesstokens, oauth apps)",
+  "version": "0.3.25",
+  "main": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/codedoctor/mongoose-identity-store-multi-tenant.git"
+  },
+  "bin": {},
+  "directories": {
+    "lib": "./lib",
+    "test": "./test"
+  },
+  "keywords": [
+    "mongoose",
+    "identity",
+    "user",
+    "oauth2"
+  ],
+  "scripts": {
+    "prepublish": "node_modules/.bin/codo -i ./src -o ./docs;node_modules/.bin/grunt coffee",
+    "test": "node_modules/.bin/grunt testandcoverage",
+    "docs": "node_modules/.bin/codo -i ./src -o ./docs"
+  },
+  "engines": {
+    "node": ">=0.8.0"
+  },
+  "dependencies": {
+    "underscore": "1.5.2",
+    "mongoose": ">=3.6.2",
+    "bcryptjs": "0.7.10",
+    "passgen": "1.0.1",
+    "underscore-ext": "0.2.0",
+    "date-utils": "1.2.14",
+    "some-errors": "0.2.0",
+    "mongoose-plugins-timestamp": "0.2.0",
+    "mongoose-plugins-created-by": "0.4.1",
+    "mongoose-plugins-delete-paranoid": "0.2.0",
+    "mongoose-plugins-resource-limits": "0.2.0",
+    "mongoose-plugins-tags-simple": "0.2.0",
+    "mongodb-objectid-helper": "0.2.0",
+    "mongoose-plugins-accessible-by": "0.2.2",
+    "async": "0.2.9",
+    "simple-paginator": "0.2.1",
+    "mongoose-rest-helper": "0.1.7",
+    "oauth2orize": "1.0.0"
+  },
+  "devDependencies": {
+    "blanket": "1.1.6",
+    "codo": "2.0.9",
+    "coffee-script": "1.7.1",
+    "grunt": "0.4.5",
+    "grunt-cli": "0.1.13",
+    "grunt-contrib-coffee": "0.10.1",
+    "grunt-contrib-watch": "0.6.1",
+    "grunt-env": "0.4.1",
+    "grunt-mocha-cov": "0.2.1",
+    "grunt-mocha-test": "0.11.0",
+    "grunt-release": "0.7.0",
+    "grunt-shell": "0.7.0",
+    "matchdep": "0.3.0",
+    "mocha": "1.15.1",
+    "mongoskin": "0.6.1",
+    "should": "2.1.1"
+  },
+  "bugs": {
+    "url": "http://github.com/codedoctor/mongoose-identity-store-multi-tenant/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://github.com/codedoctor/mongoose-identity-store-multi-tenant/raw/master/LICENSE"
+    }
+  ],
+  "config": {
+    "blanket": {
+      "pattern": [
+        "lib"
+      ],
+      "data-cover-never": "node_modules"
+    }
+  }
+}
