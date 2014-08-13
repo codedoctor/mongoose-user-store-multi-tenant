@@ -9,7 +9,7 @@ fnUnprocessableEntity = (message = "",data) ->
   return Boom.create 422, message, data
 
 ###
-Provides methods to interact with scotties.
+Provides methods to set up admin users.
 ###
 module.exports = class AdminMethods
 
@@ -43,8 +43,6 @@ module.exports = class AdminMethods
       displayName: 'ADMIN'
       roles: roles || ['admin','serveradmin']
       email : email
-
-    # @TODO Check if user exists, if so, do nothing
 
     @userMethods.create _tenantId,adminUser,{}, (err, user) =>
       return cb err if err

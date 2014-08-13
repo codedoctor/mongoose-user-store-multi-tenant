@@ -10,11 +10,11 @@ fnUnprocessableEntity = (message = "",data) ->
   return Boom.create 422, message, data
 
 ###
-Provides methods to interact with scotties.
+Provides methods to interact with entities.
 ###
 module.exports = class EntityMethods
   ###
-  Initializes a new instance of the @see ScottyMethods class.
+  Initializes a new instance of the @see EntityMethods class.
   @param {Object} models A collection of models that can be used.
   ###
   constructor:(@models) ->
@@ -34,9 +34,6 @@ module.exports = class EntityMethods
       mongooseRestHelper.getById @models.Organization,userIdOrOrganizationId,null,options,cb
 
 
-  ###
-  @TODO resthelper implementation
-  ###
   getByName: (_tenantId,name,options = {}, cb = ->) =>
     return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
     return cb fnUnprocessableEntity( i18n.errorNameRequired) unless name
@@ -53,9 +50,6 @@ module.exports = class EntityMethods
         return cb err if err
         cb null, item
 
-  ###
-  @TODO resthelper implementation
-  ###
   getByNameOrId: (_tenantId,nameOrId, options = {},cb = ->) =>
     return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
     return cb fnUnprocessableEntity( i18n.errorNameOrIdRequired) unless nameOrId

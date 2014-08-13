@@ -57,7 +57,6 @@ module.exports = class UserMethods
     mongooseRestHelper.getById @models.User,userId,null,options, cb
 
   ###
-  @TODO mongooseRest
   Retrieves users by passing a list of id's, which can be string or objectIds
   ###
   getByIds:(idList = [], options =  {}, cb = ->) =>
@@ -74,7 +73,6 @@ module.exports = class UserMethods
       cb null, new PageResult(users, users.length, 0, users.length)
 
   ###
-  @TODO mongooseRest
   Retrieves users by passing a list of usernames.
   @param {[String]} usernames an array of usernames. Case insensitive
   @param {Object} options a set of options, which can be null

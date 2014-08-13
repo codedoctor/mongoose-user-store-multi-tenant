@@ -11,7 +11,7 @@ fnUnprocessableEntity = (message = "",data) ->
   return Boom.create 422, message, data
 
 ###
-Provides methods to interact with scotties.
+Provides methods to interact with organizations.
 ###
 module.exports = class OrganizationMethods
   UPDATE_EXCLUDEFIELDS = ['_id','createdByUserId','createdAt']
@@ -77,7 +77,7 @@ module.exports = class OrganizationMethods
       @getByName nameOrId, cb
 
   ###
-  Patch an organization
+  Patches an organization
   ###
   patch: (organizationId, obj = {}, options = {}, cb = ->) =>
     return cb fnUnprocessableEntity( i18n.errorOrganizationIdRequired) unless organizationId
