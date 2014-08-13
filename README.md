@@ -1,87 +1,26 @@
 [![Build Status](https://travis-ci.org/codedoctor/mongoose-user-store-multi-tenant.svg?branch=master)](https://travis-ci.org/codedoctor/mongoose-user-store-multi-tenant)
 [![Coverage Status](https://img.shields.io/coveralls/codedoctor/mongoose-user-store-multi-tenant.svg)](https://coveralls.io/r/codedoctor/mongoose-user-store-multi-tenant)
-[![NPM Version](http://img.shields.io/npm/v/mongoose-user-store-multi-tenant.svg)](https://www.npmjs.org/package/mongoose-user-store-multi-tenant)
+[![NPM Version](http://img.shields.io/npm/v/mongoose-user-store-multi-tenant.svg)](https://www.npmjs.org/package//mongoose-user-store-multi-tenant)
 [![Dependency Status](https://gemnasium.com/codedoctor/mongoose-user-store-multi-tenant.svg)](https://gemnasium.com/codedoctor/mongoose-user-store-multi-tenant)
+[![NPM Downloads](http://img.shields.io/npm/dm/mongoose-user-store-multi-tenant.svg)](https://www.npmjs.org/package/mongoose-user-store-multi-tenant)
+[![Issues](http://img.shields.io/github/issues/codedoctor/mongoose-user-store-multi-tenant.svg)](https://github.com/codedoctor/mongoose-user-store-multi-tenant/issues)
+[![API Documentation](http://img.shields.io/badge/API-Documentation-ff69b4.svg)](http://coffeedoc.info/github/codedoctor/mongoose-user-store-multi-tenant)
 
-
-TODO:
-
-* add missing tests
-
-* use mongooserest where possible (entity, users, oauth-auth)
-* look into refresh token / token generation - storgate (reuse tokens)
-* remove expired grants / tokens - expose as function here and run in the server.
-* document
+WARNING - THIS WILL BE REFACTORED (AUG 2014) - USE AT YOUR OWN RISK FOR NOW.
 
 mongoose-user-store-multi-tenant
-===========================
+=================================
 
-npm install mongoose-user-store-multi-tenant
+A bunch of mongoose schemas to implement user management in multi tenant scenarios.
 
-A bunch of mongoose schemas to implement identity management (users, accesstokens, oauth apps) in multi tenant scenarios
+## Key Concepts
 
-This is a work in progress, and some indexes need to be defined. You have been warned
+* Each document in the database has a _tenantId. This _tenantId (formerly accountId) can be a fixed ObjectId in single tenant scenarios.
 
-## Release Notes
-### 0.3.22
-complete cleanup, signature overhaul.
-
-### 0.3.5
-sarcasm: exporting the Role schema might be helpful too.
-
-### 0.3.4
-exposed role management methods
-
-### 0.3.3
-updated versions
-allow for models to be created from connections
-
-### 0.3.2
-Bug fix: On creation of a facebook account that has an invalid email address don't blow up.
-Reason: If a user has a facebook account associated with an invalid address facebook returns a bogus record...
-
-### 0.3.1
-Added autoIndex option to store creation, defaults to true. Updated dependencies
-
-### 0.3.0
-Bumped some of deps up, especially mongoose
-
-### 0.2.7
-Added retrieval of users by usernames
-
-### 0.2.6
-Added lookup method for fast mention lookup to users.
-
-### 0.2.5
-bcrypt update, fixes memory leak or so they say
-
-### 0.2.4
-Added tests, and getByIds
-
-### 0.2.3
-destroy paranoid users too
-
-### 0.2.2
-added user.destroy
-
-### 0.2.0
-* First version
-
-## Stuff
-
-npm test
-npm run-script docs
-
-node_modules/.bin/grunt                   # Starts the watch & test run
-node_modules/.bin/grunt coffee            # Compiles the coffeescript
-
-node_modules/.bin/grunt release
-node_modules/.bin/grunt release:minor
-node_modules/.bin/grunt release:major
+* You should not have to work with the schemas directly, instead we expose methods that encapsulate the most common use cases.
 
 
-
-## Contributing to mongoose-identity-store
+## Contributing to mongoose-user-store-multi-tenant
  
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
 * Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it
@@ -93,7 +32,7 @@ node_modules/.bin/grunt release:major
 
 ## Copyright
 
-Copyright (c) 2012 Martin Wawrusch See LICENSE for
+Copyright (c) 2012 - 2014 Martin Wawrusch See LICENSE for
 further details.
 
 
