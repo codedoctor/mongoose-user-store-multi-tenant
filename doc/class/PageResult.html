@@ -19,85 +19,85 @@
       Index
     </a>
     &raquo;
-    <span class='title'>AdminMethods</span>
+    <span class='title'>PageResult</span>
   </div>
 </div>
     <div id='content'>
       <h1>
         Class:
-        AdminMethods
+        PageResult
       </h1>
       <table class='box'>
         <tr>
           <td>Defined in:</td>
-          <td>src&#47;methods&#47;admin-methods.coffee</td>
+          <td>src&#47;page-result.coffee</td>
         </tr>
       </table>
       <h2>Overview</h2>
       <div class='docstring'>
-  <p>Provides methods to interact with scotties.</p>
+  <p>Abstraction for our standard collection result</p><p>items: []
+requestOffset: 0..n
+requestCount: 1..n
+totalCount: 0..n</p>
 </div>
 <div class='tags'>
 </div>
-      <h2>Instance Method Summary</h2>
-      <ul class='summary'>
-  <li>
-    <span class='signature'>
-      <a href='#setup-dynamic'>
-        #
-(void)
-<b>setup</b><span>(_tenantId, appName, username, email, password, scopes = [], clientId = null, secret = null, options = {}, cb = function() {})</span>
-      </a>
-    </span>
-    <span class='bound note title'>Bound</span>
-    <span class='desc'>
-      Sets up an account ready for use. 
-    </span>
-  </li>
-</ul>
       <h2>Constructor Details</h2>
       <div class='methods'>
   <div class='method_details'>
     <p class='signature' id='constructor-dynamic'>
       #
 (void)
-<b>constructor</b><span>(models, users)</span>
+<b>constructor</b><span>(items = [], totalCount = 0, requestOffset = 0, requestCount = 20)</span>
       <br>
     </p>
     <div class='docstring'>
-  <p>Initializes a new instance of the @see ScottyMethods class.</p>
+  <p>Initializes a new instance of page result.</p>
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
   <ul class='param'>
     <li>
-      <span class='name'>models</span>
+      <span class='name'>items</span>
       <span class='type'>
         (
-          <tt>Object</tt>
+          <tt>Array</tt>
         )
       </span>
       &mdash;
-      <span class='desc'>A collection of models that can be used. </span>
+      <span class='desc'>the result array of this query. </span>
+    </li>
+    <li>
+      <span class='name'>requestOffset</span>
+      <span class='type'>
+        (
+          <tt>Number</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>the offset from the first element. Used for paging. </span>
+    </li>
+    <li>
+      <span class='name'>requestCount</span>
+      <span class='type'>
+        (
+          <tt>Number</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>the number of items requested, range 1..n, defaults to 20 </span>
+    </li>
+    <li>
+      <span class='name'>totalCount</span>
+      <span class='type'>
+        (
+          <tt>Number</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>the total number of entities available, range 0..n  </span>
     </li>
   </ul>
-</div>
-  </div>
-</div>
-      <h2>Instance Method Details</h2>
-      <div class='methods'>
-  <div class='method_details'>
-    <p class='signature' id='setup-dynamic'>
-      #
-(void)
-<b>setup</b><span>(_tenantId, appName, username, email, password, scopes = [], clientId = null, secret = null, options = {}, cb = function() {})</span>
-      <span class='bound note'>Bound</span>
-      <br>
-    </p>
-    <div class='docstring'>
-  <p>Sets up an account ready for use.</p>
-</div>
-<div class='tags'>
 </div>
   </div>
 </div>

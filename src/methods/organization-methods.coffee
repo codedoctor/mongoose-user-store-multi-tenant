@@ -1,9 +1,9 @@
 _ = require 'underscore-ext'
 errors = require 'some-errors'
-PageResult = require('simple-paginator').PageResult
 mongoose = require "mongoose"
 ObjectId = mongoose.Types.ObjectId
 mongooseRestHelper = require 'mongoose-rest-helper'
+i18n = require '../i18n'
 
 {isObjectId} = require 'mongodb-objectid-helper'
 

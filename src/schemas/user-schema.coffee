@@ -10,13 +10,6 @@ UserIdentitySchema = require './user-identity-schema'
 UserProfileSchema = require './user-profile-schema'
 UserImageSchema = require './user-image-schema'
 
-###
-  Perhaps we should talk about identities, not users
-  Anonymous | Cookie
-  Local: Username
-  Oauth: Twitter : Identifier
-###
-
 
 module.exports = UserSchema = new mongoose.Schema
   _tenantId:

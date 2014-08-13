@@ -1,9 +1,9 @@
 _ = require 'underscore-ext'
-PageResult = require('simple-paginator').PageResult
 errors = require 'some-errors'
 mongoose = require "mongoose"
 ObjectId = mongoose.Types.ObjectId
 mongooseRestHelper = require 'mongoose-rest-helper'
+i18n = require '../i18n'
 
 
 module.exports = class RoleMethods

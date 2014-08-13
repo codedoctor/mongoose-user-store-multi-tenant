@@ -5,6 +5,7 @@ ObjectId = mongoose.Types.ObjectId
 bcrypt = require 'bcryptjs'
 passgen = require 'passgen'
 async = require 'async'
+i18n = require '../i18n'
 
 ###
 Provides methods to interact with scotties.

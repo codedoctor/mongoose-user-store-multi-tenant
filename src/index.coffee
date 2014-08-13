@@ -1,6 +1,3 @@
-###
-Storage functionality for modeista-identity
-###
 
 Store = require './store'
 
