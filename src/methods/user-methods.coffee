@@ -52,7 +52,7 @@ module.exports = class UserMethods
   Retrieves a user by it's id.
   ###
   get: (userId,options = {}, cb = ->) =>
-    return cb new Error "userId parameter is required." unless userId
+    return cb fnUnprocessableEntity( i18n.errorUserIdRequired) unless userId
     mongooseRestHelper.getById @models.User,userId,null,options, cb
 
   ###
@@ -134,6 +134,7 @@ module.exports = class UserMethods
 
   getByName: (_tenantId,name,options = {}, cb = ->) =>
     return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+    return cb fnUnprocessableEntity( i18n.errorNameRequired) unless name
 
     if _.isFunction(options)
       cb = options 
@@ -147,6 +148,7 @@ module.exports = class UserMethods
 
   getByPrimaryEmail: (_tenantId,email, options = {}, cb = ->) =>
     return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+    return cb fnUnprocessableEntity( i18n.errorEmailRequired) unless email
 
     if _.isFunction(options)
       cb = options 
@@ -357,7 +359,7 @@ module.exports = class UserMethods
       cb = options 
       options = {}
 
-    return cb(new Error("An id parameter within profile is required.")) unless profile && profile.id
+    return cb fnUnprocessableEntity( i18n.errorIdWithinProfileRequired) unless profile && profile.id
 
     _tenantId = mongooseRestHelper.asObjectId _tenantId
 
@@ -594,11 +596,12 @@ module.exports = class UserMethods
       cb = options 
       options = {}
 
-    return cb new Error("A userId is required")  unless userId
-    return cb new Error("A provider is required")  unless provider
-    return cb new Error("A v1 is required")  unless v1
-    return cb new Error("A profile is required")  unless profile
-    return cb new Error("An id parameter within profile is required.")  unless profile && profile.id
+    return cb fnUnprocessableEntity( i18n.errorUserIdRequired) unless userId
+    return cb fnUnprocessableEntity( i18n.errorProviderRequired) unless provider
+    return cb fnUnprocessableEntity( i18n.errorV1Required) unless v1
+    return cb fnUnprocessableEntity( i18n.errorProfileRequired) unless profile
+    return cb fnUnprocessableEntity( i18n.errorIdWithinProfileRequired) unless profile && profile.id
+
     userId = mongooseRestHelper.asObjectId userId
     provider = provider.toLowerCase()
 
@@ -629,8 +632,9 @@ module.exports = class UserMethods
       cb = options 
       options = {}
 
-    return cb new Error("A userId is required")  unless userId
-    return cb new Error("A identityId is required")  unless identityId
+    return cb fnUnprocessableEntity( i18n.errorUserIdRequired) unless userId
+    return cb fnUnprocessableEntity( i18n.errorIdentityIdRequired) unless identityId
+
     userId = mongooseRestHelper.asObjectId userId
     identityId = mongooseRestHelper.asObjectId identityId
 

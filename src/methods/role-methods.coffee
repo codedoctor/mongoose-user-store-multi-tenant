@@ -29,7 +29,7 @@ module.exports = class RoleMethods
   Get a role for its id.
   ###
   get: (roleId,options = {}, cb = ->) =>
-    return cb new Error "roleId parameter is required." unless roleId
+    return cb fnUnprocessableEntity( i18n.errorRoleIdRequired) unless roleId
     mongooseRestHelper.getById @models.Role,roleId,null,options, cb
 
 
@@ -37,7 +37,7 @@ module.exports = class RoleMethods
   Completely destroys a role.
   ###
   destroy: (roleId, options = {}, cb = ->) =>
-    return cb new Error "roleId parameter is required." unless roleId
+    return cb fnUnprocessableEntity( i18n.errorRoleIdRequired) unless roleId
     settings = {}
     mongooseRestHelper.destroy @models.Role,roleId, settings,{}, cb
 
@@ -47,6 +47,7 @@ module.exports = class RoleMethods
   ###
   create:(_tenantId,objs = {}, options = {}, cb = ->) =>
     return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+
     settings = {}
     objs._tenantId = mongooseRestHelper.asObjectId _tenantId
     mongooseRestHelper.create @models.Role,settings,objs,options,cb
@@ -56,12 +57,9 @@ module.exports = class RoleMethods
   Updates a role.
   ###
   patch: (roleId, obj = {}, options = {}, cb = ->) =>
-    return cb new Error "roleId parameter is required." unless roleId
+    return cb fnUnprocessableEntity( i18n.errorRoleIdRequired) unless roleId
 
     settings =
       exclude : UPDATE_EXCLUDEFIELDS
     mongooseRestHelper.patch @models.Role,roleId, settings, obj, options, cb
-
-
-
 

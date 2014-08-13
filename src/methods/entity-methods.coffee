@@ -23,12 +23,13 @@ module.exports = class EntityMethods
   ###
   Looks up a user or organization by id. Users are first.
   ###
-  get: (id,options = {}, cb = ->) =>
-    return cb new Error "id parameter is required." unless id
-    mongooseRestHelper.getById @models.User,id,null,options, (err,item) =>
+  get: (userIdOrOrganizationId,options = {}, cb = ->) =>
+    return cb fnUnprocessableEntity( i18n.errorUserIdOrOrganizationIdRequired) unless userIdOrOrganizationId
+
+    mongooseRestHelper.getById @models.User,userIdOrOrganizationId,null,options, (err,item) =>
       return cb err if err
       return cb null, item if item
-      mongooseRestHelper.getById @models.Organization,id,null,options,cb
+      mongooseRestHelper.getById @models.Organization,userIdOrOrganizationId,null,options,cb
 
 
   ###
@@ -36,6 +37,7 @@ module.exports = class EntityMethods
   ###
   getByName: (_tenantId,name,options = {}, cb = ->) =>
     return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+    return cb fnUnprocessableEntity( i18n.errorNameRequired) unless name
 
     if _.isFunction(options)
       cb = options 
@@ -54,6 +56,7 @@ module.exports = class EntityMethods
   ###
   getByNameOrId: (_tenantId,nameOrId, options = {},cb = ->) =>
     return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+    return cb fnUnprocessableEntity( i18n.errorNameOrIdRequired) unless nameOrId
 
     if _.isFunction(options)
       cb = options 

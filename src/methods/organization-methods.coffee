@@ -37,7 +37,8 @@ module.exports = class OrganizationMethods
   Looks up an organization by id.
   ###
   get: (organizationId, options =  {}, cb = ->) =>
-    return cb new Error "organizationId parameter is required." unless organizationId
+    return cb fnUnprocessableEntity( i18n.errorOrganizationIdRequired) unless organizationId
+
     mongooseRestHelper.getById @models.Organization,organizationId,null,options, cb
 
 
@@ -45,12 +46,13 @@ module.exports = class OrganizationMethods
   Completely destroys an organization.
   ###
   destroy: (organizationId,options = {}, cb = ->) =>
-    return cb new Error "organizationId parameter is required." unless organizationId
+    return cb fnUnprocessableEntity( i18n.errorOrganizationIdRequired) unless organizationId
     settings = {}
     mongooseRestHelper.destroy @models.Organization,organizationId, settings,{}, cb
 
   getByName: (_tenantId, name, options = {}, cb = ->) =>
     return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+    return cb fnUnprocessableEntity( i18n.errorNameRequired) unless name
 
     if _.isFunction(options)
       cb = options 
@@ -62,6 +64,7 @@ module.exports = class OrganizationMethods
 
   getByNameOrId: (_tenantId, nameOrId, options = {},cb = ->) =>
     return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+    return cb fnUnprocessableEntity( i18n.errorNameOrIdRequired) unless nameOrId
 
     if _.isFunction(options)
       cb = options 
@@ -76,7 +79,7 @@ module.exports = class OrganizationMethods
   Patch an organization
   ###
   patch: (organizationId, obj = {}, options = {}, cb = ->) =>
-    return cb new Error "organizationId parameter is required." unless organizationId
+    return cb fnUnprocessableEntity( i18n.errorOrganizationIdRequired) unless organizationId
     settings =
       exclude : UPDATE_EXCLUDEFIELDS
     mongooseRestHelper.patch @models.Organization,organizationId, settings, obj, options, cb
