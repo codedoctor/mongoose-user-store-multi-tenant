@@ -1,8 +1,7 @@
 _ = require 'underscore-ext'
 errors = require 'some-errors'
-mongoose = require "mongoose"
-ObjectId = mongoose.Types.ObjectId
 mongooseRestHelper = require 'mongoose-rest-helper'
+
 i18n = require '../i18n'
 Hoek = require 'hoek'
 Boom = require 'boom'
@@ -90,7 +89,7 @@ module.exports = class OrganizationMethods
   create: (_tenantId, objs = {},options = {}, cb = ->) =>
     return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
 
-    objs._tenantId = new ObjectId _tenantId.toString()
+    objs._tenantId = mongooseRestHelper.asObjectId _tenantId
 
     settings = {}
     mongooseRestHelper.create @models.Organization,settings,objs,options,cb

@@ -1,20 +1,15 @@
 _ = require 'underscore-ext'
-
-
-
-errors = require 'some-errors'
-
-PageResult = require '../page-result'
-mongoose = require "mongoose"
-ObjectId = mongoose.Types.ObjectId
 bcrypt = require 'bcryptjs'
-passgen = require 'passgen'
-mongooseRestHelper = require 'mongoose-rest-helper'
-i18n = require '../i18n'
-Hoek = require 'hoek'
 Boom = require 'boom'
-
+errors = require 'some-errors'
+Hoek = require 'hoek'
+mongooseRestHelper = require 'mongoose-rest-helper'
+passgen = require 'passgen'
 {isObjectId} = require 'mongodb-objectid-helper'
+
+i18n = require '../i18n'
+PageResult = require '../page-result'
+
 require('date-utils') # NOTE DANGEROUS - FIND A BETTER METHOD SOMETIMES
 
 fnUnprocessableEntity = (message = "",data) ->
@@ -66,7 +61,7 @@ module.exports = class UserMethods
   Retrieves users by passing a list of id's, which can be string or objectIds
   ###
   getByIds:(idList = [], options =  {}, cb = ->) =>
-    idList = _.map idList, (x) -> new ObjectId x.toString()
+    idList = _.map idList, (x) -> mongooseRestHelper.asObjectId(x)
 
     if _.isFunction(options)
       cb = options 
@@ -93,7 +88,7 @@ module.exports = class UserMethods
       cb = options 
       options = {}
 
-    _tenantId = new ObjectId _tenantId.toString()
+    _tenantId = mongooseRestHelper.asObjectId _tenantId
     usernames = _.map usernames, (x) -> x.toLowerCase()
 
     query = @models.User.find({_tenantId : _tenantId}).where('username').in(usernames)
@@ -123,7 +118,7 @@ module.exports = class UserMethods
       options = {}
 
     q = (q || '').toLowerCase().trim()
-    _tenantId = new ObjectId _tenantId.toString()
+    _tenantId = mongooseRestHelper.asObjectId _tenantId
 
     options.limit or= 10
     options.sortOrder or= 'username'
@@ -145,7 +140,7 @@ module.exports = class UserMethods
       cb = options 
       options = {}
 
-    _tenantId = new ObjectId _tenantId.toString()
+    _tenantId = mongooseRestHelper.asObjectId _tenantId
     name = name.toLowerCase()
     @models.User.findOne {_tenantId : _tenantId,username: name }, (err, item) =>
       return cb err if err
@@ -158,7 +153,7 @@ module.exports = class UserMethods
       cb = options 
       options = {}
 
-    _tenantId = new ObjectId _tenantId.toString()
+    _tenantId = mongooseRestHelper.asObjectId _tenantId
     email = email.toLowerCase()
     @models.User.findOne {_tenantId : _tenantId,primaryEmail: email} , (err, item) =>
       return cb err if err
@@ -184,7 +179,7 @@ module.exports = class UserMethods
       cb = options 
       options = {}
 
-    _tenantId = new ObjectId _tenantId.toString()
+    _tenantId = mongooseRestHelper.asObjectId _tenantId
     @getByNameOrId _tenantId,usernameOrId, (err, item) =>
       # CHECK ACCESS RIGHTS. If actor is not the creator
       return cb err if err
@@ -208,7 +203,7 @@ module.exports = class UserMethods
       cb = options 
       options = {}
 
-    _tenantId = new ObjectId _tenantId.toString()
+    _tenantId = mongooseRestHelper.asObjectId _tenantId
     @getByNameOrId _tenantId,usernameOrId, (err, item) =>
 
       return cb err if err
@@ -267,7 +262,7 @@ module.exports = class UserMethods
       cb = options 
       options = {}
 
-    _tenantId = new ObjectId _tenantId.toString()
+    _tenantId = mongooseRestHelper.asObjectId _tenantId
     usernameOrEmail = usernameOrEmail.toLowerCase()
 
     @models.User.findOne {_tenantId : _tenantId,username: usernameOrEmail} , (err, item) =>
@@ -292,7 +287,7 @@ module.exports = class UserMethods
       cb = options 
       options = {}
 
-    _tenantId = new ObjectId _tenantId.toString()
+    _tenantId = mongooseRestHelper.asObjectId _tenantId
     usernameOrEmail = usernameOrEmail.toLowerCase()
     
     @findUserByUsernameOrEmail _tenantId,usernameOrEmail, (err, user) =>
@@ -323,7 +318,7 @@ module.exports = class UserMethods
       cb = options 
       options = {}
 
-    _tenantId = new ObjectId _tenantId.toString()
+    _tenantId = mongooseRestHelper.asObjectId _tenantId
 
     _.defaults objs, {username : null, primaryEmail : null , password : null}
     objs.primaryEmail = objs.email if objs.email && !objs.primaryEmail
@@ -365,7 +360,7 @@ module.exports = class UserMethods
 
     return cb(new Error("An id parameter within profile is required.")) unless profile && profile.id
 
-    _tenantId = new ObjectId _tenantId.toString()
+    _tenantId = mongooseRestHelper.asObjectId _tenantId
 
     #console.log "PROFILE #{JSON.stringify(profile)} ENDPROFILE" 
 
@@ -605,7 +600,7 @@ module.exports = class UserMethods
     return cb new Error("A v1 is required")  unless v1
     return cb new Error("A profile is required")  unless profile
     return cb new Error("An id parameter within profile is required.")  unless profile && profile.id
-    userId = new ObjectId(userId.toString())
+    userId = mongooseRestHelper.asObjectId userId
     provider = provider.toLowerCase()
 
     @models.User.findOne _id: userId , (err, item) =>
@@ -637,8 +632,8 @@ module.exports = class UserMethods
 
     return cb new Error("A userId is required")  unless userId
     return cb new Error("A identityId is required")  unless identityId
-    userId = new ObjectId(userId.toString())
-    identityId = new ObjectId(identityId.toString())
+    userId = mongooseRestHelper.asObjectId userId
+    identityId = mongooseRestHelper.asObjectId identityId
 
     @models.User.findOne _id: userId , (err, item) =>
       return cb err if err
@@ -658,7 +653,7 @@ module.exports = class UserMethods
 
     return cb errors.UnprocessableEntity("userId") unless userId
     return cb errors.UnprocessableEntity("roles") unless roles && roles.length > 0
-    userId = new ObjectId(userId.toString())
+    userId = mongooseRestHelper.asObjectId userId
 
     @models.User.findOne _id: userId , (err, item) =>
       return cb err if err
@@ -675,7 +670,7 @@ module.exports = class UserMethods
 
     return cb errors.UnprocessableEntity("userId") unless userId
     return cb errors.UnprocessableEntity("roles") unless roles && roles.length > 0
-    userId = new ObjectId(userId.toString())
+    userId = mongooseRestHelper.asObjectId userId
 
     @models.User.findOne _id: userId , (err, item) =>
       return cb err if err
@@ -721,7 +716,7 @@ module.exports = class UserMethods
     return cb errors.UnprocessableEntity("password") unless password
 
     userId = token.substr(resetPasswordTokenLength,token.length - 2 * resetPasswordTokenLength)
-    userId = new ObjectId(userId)
+    userId = mongooseRestHelper.asObjectId userId
     @_hashPassword password, (err, hash) =>
       return cb err if err
       @models.User.findOne _id: userId , (err, user) =>
@@ -746,7 +741,7 @@ module.exports = class UserMethods
 
     return cb errors.UnprocessableEntity("userId") unless userId
     return cb errors.UnprocessableEntity("email") unless email
-    userId = new ObjectId(userId.toString())
+    userId = mongooseRestHelper.asObjectId userId
 
     @models.User.findOne _id: userId , (err, item) =>
       return cb err if err
@@ -764,7 +759,7 @@ module.exports = class UserMethods
 
     return cb new errors.UnprocessableEntity("userId") unless userId
     return cb new errors.UnprocessableEntity("email") unless roles && roles.length > 0
-    userId = new ObjectId(userId.toString())
+    userId = mongooseRestHelper.asObjectId userId
 
     @models.User.findOne _id: userId , (err, item) =>
       return cb err if err

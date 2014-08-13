@@ -41,7 +41,7 @@ module.exports = class EntityMethods
       cb = options 
       options = {}
 
-    _tenantId = mongooseRestHelper.asObjectId  _tenantId
+    _tenantId = mongooseRestHelper.asObjectId _tenantId
     @models.User.findOne {_tenantId : _tenantId, username: name} , (err, item) =>
       return cb err if err
       return cb null, item if item

@@ -1,7 +1,5 @@
 _ = require 'underscore-ext'
 errors = require 'some-errors'
-mongoose = require "mongoose"
-ObjectId = mongoose.Types.ObjectId
 mongooseRestHelper = require 'mongoose-rest-helper'
 i18n = require '../i18n'
 Hoek = require 'hoek'
@@ -51,7 +49,7 @@ module.exports = class RoleMethods
   create:(_tenantId,objs = {}, options = {}, cb = ->) =>
     return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
     settings = {}
-    objs._tenantId = new ObjectId _tenantId.toString()
+    objs._tenantId = mongooseRestHelper.asObjectId _tenantId
     mongooseRestHelper.create @models.Role,settings,objs,options,cb
 
 
