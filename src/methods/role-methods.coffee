@@ -4,15 +4,21 @@ mongoose = require "mongoose"
 ObjectId = mongoose.Types.ObjectId
 mongooseRestHelper = require 'mongoose-rest-helper'
 i18n = require '../i18n'
+Hoek = require 'hoek'
+Boom = require 'boom'
+
+fnUnprocessableEntity = (message = "",data) ->
+  return Boom.create 422, message, data
 
 
 module.exports = class RoleMethods
   UPDATE_EXCLUDEFIELDS = ['_id']
 
   constructor:(@models) ->
+    Hoek.assert @models,i18n.assertModelsRequired
 
   all: (_tenantId,options = {},cb = ->) =>
-    return cb new Error "_tenantId parameter is required." unless _tenantId
+    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
 
     settings = 
         baseQuery:
@@ -43,7 +49,7 @@ module.exports = class RoleMethods
   Create a new role.
   ###
   create:(_tenantId,objs = {}, options = {}, cb = ->) =>
-    return cb new Error "_tenantId parameter is required." unless _tenantId
+    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
     settings = {}
     objs._tenantId = new ObjectId _tenantId.toString()
     mongooseRestHelper.create @models.Role,settings,objs,options,cb
@@ -53,7 +59,8 @@ module.exports = class RoleMethods
   Updates a role.
   ###
   patch: (roleId, obj = {}, options = {}, cb = ->) =>
-    return cb new Error "scopeId parameter is required." unless scopeId
+    return cb new Error "roleId parameter is required." unless roleId
+
     settings =
       exclude : UPDATE_EXCLUDEFIELDS
     mongooseRestHelper.patch @models.Role,roleId, settings, obj, options, cb

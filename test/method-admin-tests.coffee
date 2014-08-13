@@ -33,7 +33,7 @@ describe 'testing admin', ->
         {"name": "admin", "description": "Allows full admin access to the platform.", "developerDescription": "", "roles": ["admin"]}
       ]
 
-      helper.store.admin.setup helper._tenantId,'app1',"martin","password1","martin@wawrusch.com",scopes,null,null,{}, (err,user) ->
+      helper.store.admin.setup helper._tenantId,"martin","password1","martin@wawrusch.com",null,{}, (err,user) ->
         return cb err if err
         should.exist user
 

@@ -4,9 +4,13 @@ mongoose = require "mongoose"
 ObjectId = mongoose.Types.ObjectId
 mongooseRestHelper = require 'mongoose-rest-helper'
 i18n = require '../i18n'
+Hoek = require 'hoek'
+Boom = require 'boom'
 
 {isObjectId} = require 'mongodb-objectid-helper'
 
+fnUnprocessableEntity = (message = "",data) ->
+  return Boom.create 422, message, data
 
 ###
 Provides methods to interact with scotties.
@@ -18,10 +22,10 @@ module.exports = class OrganizationMethods
   @param {Object} models A collection of models that can be used.
   ###
   constructor:(@models) ->
-    throw new Error "models parameter is required" unless @models
+    Hoek.assert @models,i18n.assertModelsRequired
 
   all: (_tenantId, options = {}, cb = ->) =>
-    return cb new Error "_tenantId parameter is required." unless _tenantId
+    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
 
     settings = 
         baseQuery:
@@ -32,7 +36,7 @@ module.exports = class OrganizationMethods
     mongooseRestHelper.all @models.Organization,settings,options, cb
 
   ###
-  Looks up a user by id.
+  Looks up an organization by id.
   ###
   get: (organizationId, options =  {}, cb = ->) =>
     return cb new Error "organizationId parameter is required." unless organizationId
@@ -48,6 +52,8 @@ module.exports = class OrganizationMethods
     mongooseRestHelper.destroy @models.Organization,organizationId, settings,{}, cb
 
   getByName: (_tenantId, name, options = {}, cb = ->) =>
+    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+
     if _.isFunction(options)
       cb = options 
       options = {}
@@ -57,10 +63,11 @@ module.exports = class OrganizationMethods
       cb null, item
 
   getByNameOrId: (_tenantId, nameOrId, options = {},cb = ->) =>
+    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+
     if _.isFunction(options)
       cb = options 
       options = {}
-
 
     if isObjectId(nameOrId)
       @get nameOrId, cb
@@ -81,7 +88,8 @@ module.exports = class OrganizationMethods
   Creates a new organization.
   ###
   create: (_tenantId, objs = {},options = {}, cb = ->) =>
-    return cb new Error "_tenantId parameter is required." unless _tenantId
+    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+
     objs._tenantId = new ObjectId _tenantId.toString()
 
     settings = {}

@@ -3,11 +3,18 @@ Translatable and non translatable messages for this module.
 ###
 module.exports = 
   assertModelsRequired: "Required parameter '@models' is missing."
+  assertUserMethodsRequired: "Required parameter 'userMethods' is missing."
 
   #assertOauthAccessGrantInModels : "@models must contain an 'OauthAccessGrant' model."
   #assertOauthScopeMethods: "Required parameter '@oauthScopeMethods' parameter is missing"
 
   errorTenantIdRequired: "Required parameter '_tenantId' is missing."
+  errorUsernameRequired: "Required parameter 'username' is missing."
+  errorEmailRequired: "Required parameter 'email' is missing."
+  errorPasswordRequired: "Required parameter 'password' is missing."
+
+
+  prefixErrorCouldNotFindUser: "Could not find user with id"
   
 ###
 errorUserIdRequired: "Required parameter 'userId' is missing."

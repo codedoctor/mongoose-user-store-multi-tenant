@@ -1,4 +1,7 @@
 _ = require 'underscore-ext'
+
+
+
 errors = require 'some-errors'
 
 PageResult = require '../page-result'
@@ -8,16 +11,23 @@ bcrypt = require 'bcryptjs'
 passgen = require 'passgen'
 mongooseRestHelper = require 'mongoose-rest-helper'
 i18n = require '../i18n'
-
+Hoek = require 'hoek'
+Boom = require 'boom'
 
 {isObjectId} = require 'mongodb-objectid-helper'
 require('date-utils') # NOTE DANGEROUS - FIND A BETTER METHOD SOMETIMES
+
+fnUnprocessableEntity = (message = "",data) ->
+  return Boom.create 422, message, data
 
 ###
 Provides methods to interact with scotties.
 ###
 module.exports = class UserMethods
-  #CREATE_FIELDS = ['username']
+
+  ###
+  @TODO INVERT THIS LIKE EVERYWHERE ELSE
+  ###
   UPDATE_FIELDS_FULL = ['username', 'description', 'displayName', 'identities','primaryEmail'
     'profileLinks', 'userImages', 'selectedUserImage', 'emails', 'roles', 'data', 'resourceLimits','onboardingState',
     'title','location','needsInit']
@@ -27,13 +37,13 @@ module.exports = class UserMethods
   @param {Object} models A collection of models that can be used.
   ###
   constructor:(@models) ->
-    throw new Error "models parameter is required" unless @models
+    Hoek.assert @models,i18n.assertModelsRequired
 
   ###
   Retrieve all users for a specific _tenantId
   ###
   all:(_tenantId,options = {}, cb = ->) =>
-    return cb new Error "_tenantId parameter is required." unless _tenantId
+    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
 
     settings = 
         baseQuery:
@@ -66,7 +76,7 @@ module.exports = class UserMethods
       return cb err if err
       items or= []
 
-      cb null, new PageResult(items, items.length, 0, 99999999)
+      cb null, new PageResult(items, items.length, 0, items.length)
 
   ###
   @TODO mongooseRest
@@ -77,6 +87,8 @@ module.exports = class UserMethods
   @option options [String] select the space separated fields to return, which default to all.
   ###
   getByUsernames:(_tenantId,usernames = [],options = {}, cb = ->) =>
+    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+
     if _.isFunction(options)
       cb = options 
       options = {}
@@ -104,6 +116,8 @@ module.exports = class UserMethods
   @option options [String] select the space separated fields to return, which default to '_id username displayName selectedUserImage'.
   ###
   lookup: (_tenantId,q,options = {}, cb = ->) =>
+    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+
     if _.isFunction(options)
       cb = options 
       options = {}
@@ -125,6 +139,8 @@ module.exports = class UserMethods
       cb null, new PageResult(items, items.length, 0, items.length)
 
   getByName: (_tenantId,name,options = {}, cb = ->) =>
+    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+
     if _.isFunction(options)
       cb = options 
       options = {}
@@ -136,6 +152,8 @@ module.exports = class UserMethods
       cb null, item
 
   getByPrimaryEmail: (_tenantId,email, options = {}, cb = ->) =>
+    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+
     if _.isFunction(options)
       cb = options 
       options = {}
@@ -147,6 +165,8 @@ module.exports = class UserMethods
       cb null, item
 
   getByNameOrId: (_tenantId,nameOrId,options = {}, cb = ->) =>
+    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+
     if _.isFunction(options)
       cb = options 
       options = {}
@@ -158,6 +178,8 @@ module.exports = class UserMethods
       @getByName _tenantId,nameOrId, cb
 
   patch: (_tenantId,usernameOrId, obj = {},options = {}, cb = ->) =>
+    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+
     if _.isFunction(options)
       cb = options 
       options = {}
@@ -173,13 +195,15 @@ module.exports = class UserMethods
         return cb err if err
 
         if obj.password
-          @setPassword _tenantId,usernameOrId,obj.password, {}, (err,item2) ->
+          @setPassword _tenantId,usernameOrId,obj.password, {}, (err,item2) =>
             return cb err if err
             cb null, item
         else
           cb null, item
 
   delete: (_tenantId,usernameOrId,options = {}, cb = ->) =>
+    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+
     if _.isFunction(options)
       cb = options 
       options = {}
@@ -199,6 +223,8 @@ module.exports = class UserMethods
         cb null, item
 
   destroy: (_tenantId,usernameOrId, options = {}, cb = ->) =>
+    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+
     if _.isFunction(options)
       cb = options 
       options = {}
@@ -212,6 +238,8 @@ module.exports = class UserMethods
         cb null, item
 
   setPassword: (_tenantId,usernameOrId, password,options = {}, cb = ->) =>
+    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+
     if _.isFunction(options)
       cb = options 
       options = {}
@@ -233,6 +261,8 @@ module.exports = class UserMethods
   Looks up a user by username or email.
   ###
   findUserByUsernameOrEmail: (_tenantId,usernameOrEmail, options = {}, cb = ->) =>
+    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+
     if _.isFunction(options)
       cb = options 
       options = {}
@@ -256,6 +286,8 @@ module.exports = class UserMethods
   cb(null, user) in case of user not found, password not valid, or valid user
   ###
   validateUserByUsernameOrEmail: (_tenantId,usernameOrEmail, password, options = {}, cb = ->) =>
+    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+
     if _.isFunction(options)
       cb = options 
       options = {}
@@ -285,6 +317,8 @@ module.exports = class UserMethods
   Creates a new user.
   ###
   create: (_tenantId,objs = {},options = {}, cb = ->) =>
+    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+
     if _.isFunction(options)
       cb = options 
       options = {}
@@ -323,6 +357,8 @@ module.exports = class UserMethods
   @param {Object} profile The profile as defined here: http://passportjs.org/guide/user-profile.html
   ###
   getOrCreateUserFromProvider: (_tenantId,provider, v1, v2, profile,options = {}, cb = ->) =>
+    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+
     if _.isFunction(options)
       cb = options 
       options = {}
@@ -574,7 +610,7 @@ module.exports = class UserMethods
 
     @models.User.findOne _id: userId , (err, item) =>
       return cb err if err
-      return cb new errors.NotFound("/users/#{userId}") unless item
+      return cb Boom.notFound("#{i18n.prefixErrorCouldNotFindUser} #{userId}") unless item
 
       existing = _.find item.identities, (x) -> x.provider is provider
       existing.remove() if existing
@@ -606,7 +642,7 @@ module.exports = class UserMethods
 
     @models.User.findOne _id: userId , (err, item) =>
       return cb err if err
-      return cb new errors.NotFound("/users/#{userId}") unless item
+      return cb Boom.notFound("#{i18n.prefixErrorCouldNotFindUser} #{userId}") unless item
 
       existing = item.identities.id(identityId)
       existing.remove() if existing
@@ -626,7 +662,7 @@ module.exports = class UserMethods
 
     @models.User.findOne _id: userId , (err, item) =>
       return cb err if err
-      return cb new errors.NotFound("/users/#{userId}") unless item
+      return cb Boom.notFound("#{i18n.prefixErrorCouldNotFindUser} #{userId}") unless item
       item.roles = _.union(item.roles || [],roles)
       item.save (err) =>
         return cb err if err
@@ -643,7 +679,7 @@ module.exports = class UserMethods
 
     @models.User.findOne _id: userId , (err, item) =>
       return cb err if err
-      return cb new errors.NotFound("/users/#{userId}") unless item
+      return cb Boom.notFound("#{i18n.prefixErrorCouldNotFindUser} #{userId}") unless item
       item.roles = _.difference(item.roles || [],roles)
       item.save (err) =>
         return cb err if err
@@ -652,6 +688,8 @@ module.exports = class UserMethods
   resetPasswordTokenLength = 10
 
   resetPassword: (_tenantId,email,options = {},cb = ->) =>
+    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+
     if _.isFunction(options)
       cb = options 
       options = {}
@@ -659,7 +697,7 @@ module.exports = class UserMethods
     return cb new errors.UnprocessableEntity("email") unless email
     @getByPrimaryEmail _tenantId,email, (err,user) =>
       return cb err if err
-      return cb new errors.NotFound("") unless user
+      return cb Boom.notFound("#{i18n.prefixErrorCouldNotFindUser} #{email}") unless user
 
       newToken = passgen.create(resetPasswordTokenLength) + user._id.toString() + passgen.create(resetPasswordTokenLength)
       user.resetPasswordToken =
@@ -673,6 +711,8 @@ module.exports = class UserMethods
 
   #p0qEeKBoh25031326eefa65c0000000006TWlhZKbLjn
   resetPasswordToken: (_tenantId,token,password,options = {},cb = ->) =>
+    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+
     if _.isFunction(options)
       cb = options 
       options = {}
@@ -686,7 +726,8 @@ module.exports = class UserMethods
       return cb err if err
       @models.User.findOne _id: userId , (err, user) =>
         return cb err if err
-        return cb new errors.NotFound("/users/#{userId}") unless user
+        return cb Boom.notFound("#{i18n.prefixErrorCouldNotFindUser} #{userId}") unless user
+
         return cb new errors.UnprocessableEntity('token') unless user.resetPasswordToken
         return cb new errors.UnprocessableEntity('token') unless (user.resetPasswordToken.token || '').toLowerCase() is token.toLowerCase()
         return cb new errors.UnprocessableEntity('validTill') unless user.resetPasswordToken.validTill && user.resetPasswordToken.validTill.isAfter(new Date())
@@ -709,7 +750,8 @@ module.exports = class UserMethods
 
     @models.User.findOne _id: userId , (err, item) =>
       return cb err if err
-      return cb new errors.NotFound("/users/#{userId}") unless item
+      return cb Boom.notFound("#{i18n.prefixErrorCouldNotFindUser} #{userId}") unless item
+
       item.emails = _.union(item.emails || [],[email])
       item.save (err) =>
         return cb err if err
@@ -726,8 +768,9 @@ module.exports = class UserMethods
 
     @models.User.findOne _id: userId , (err, item) =>
       return cb err if err
-      return cb new errors.NotFound("/users/#{userId}") unless item
+      return cb Boom.notFound("#{i18n.prefixErrorCouldNotFindUser} #{userId}") unless item
       item.emails = _.difference(item.emails || [],[email])
       item.save (err) =>
         return cb err if err
         cb null,item.emails, item
+

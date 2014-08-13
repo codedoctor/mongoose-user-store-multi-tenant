@@ -1,6 +1,8 @@
 _ = require 'underscore'
 mongoose = require 'mongoose'
 errors = require 'some-errors'
+Hoek = require 'hoek'
+Boom = require 'boom'
 
 pluginAccessibleBy = require "mongoose-plugins-accessible-by"
 
