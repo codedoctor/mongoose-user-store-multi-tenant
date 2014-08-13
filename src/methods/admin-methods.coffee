@@ -25,7 +25,7 @@ module.exports = class AdminMethods
   Sets up an account ready for use.
   ###
   setup: (_tenantId, username, email, password, roles, options = {}, cb = ->) =>
-    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+    return cb Boom.badRequest( i18n.errorTenantIdRequired) unless _tenantId
     return cb fnUnprocessableEntity( i18n.errorUsernameRequired) unless username
     return cb fnUnprocessableEntity( i18n.errorEmailRequired) unless email
     return cb fnUnprocessableEntity( i18n.errorPasswordRequired) unless password

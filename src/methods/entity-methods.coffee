@@ -6,8 +6,6 @@ Boom = require 'boom'
 
 {isObjectId} = require 'mongodb-objectid-helper'
 
-fnUnprocessableEntity = (message = "",data) ->
-  return Boom.create 422, message, data
 
 ###
 Provides methods to interact with entities.
@@ -26,7 +24,7 @@ module.exports = class EntityMethods
   Looks up a user or organization by id. Users are first.
   ###
   get: (userIdOrOrganizationId,options = {}, cb = ->) =>
-    return cb fnUnprocessableEntity( i18n.errorUserIdOrOrganizationIdRequired) unless userIdOrOrganizationId
+    return cb Boom.badRequest( i18n.errorUserIdOrOrganizationIdRequired) unless userIdOrOrganizationId
 
     mongooseRestHelper.getById @models.User,userIdOrOrganizationId,null,options, (err,item) =>
       return cb err if err
@@ -35,8 +33,8 @@ module.exports = class EntityMethods
 
 
   getByName: (_tenantId,name,options = {}, cb = ->) =>
-    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
-    return cb fnUnprocessableEntity( i18n.errorNameRequired) unless name
+    return cb Boom.badRequest( i18n.errorTenantIdRequired) unless _tenantId
+    return cb Boom.badRequest( i18n.errorNameRequired) unless name
 
     if _.isFunction(options)
       cb = options 
@@ -51,8 +49,8 @@ module.exports = class EntityMethods
         cb null, item
 
   getByNameOrId: (_tenantId,nameOrId, options = {},cb = ->) =>
-    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
-    return cb fnUnprocessableEntity( i18n.errorNameOrIdRequired) unless nameOrId
+    return cb Boom.badRequest( i18n.errorTenantIdRequired) unless _tenantId
+    return cb Boom.badRequest( i18n.errorNameOrIdRequired) unless nameOrId
 
     if _.isFunction(options)
       cb = options 

@@ -4,10 +4,6 @@ i18n = require '../i18n'
 Hoek = require 'hoek'
 Boom = require 'boom'
 
-fnUnprocessableEntity = (message = "",data) ->
-  return Boom.create 422, message, data
-
-
 module.exports = class RoleMethods
   UPDATE_EXCLUDEFIELDS = ['_id']
 
@@ -16,7 +12,7 @@ module.exports = class RoleMethods
     Hoek.assert @models.Role,i18n.assertRoleInModelsRequired
 
   all: (_tenantId,options = {},cb = ->) =>
-    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+    return cb Boom.badRequest( i18n.errorTenantIdRequired) unless _tenantId
 
     settings = 
         baseQuery:
@@ -30,7 +26,7 @@ module.exports = class RoleMethods
   Get a role for its id.
   ###
   get: (roleId,options = {}, cb = ->) =>
-    return cb fnUnprocessableEntity( i18n.errorRoleIdRequired) unless roleId
+    return cb Boom.badRequest( i18n.errorRoleIdRequired) unless roleId
     mongooseRestHelper.getById @models.Role,roleId,null,options, cb
 
 
@@ -38,7 +34,7 @@ module.exports = class RoleMethods
   Completely destroys a role.
   ###
   destroy: (roleId, options = {}, cb = ->) =>
-    return cb fnUnprocessableEntity( i18n.errorRoleIdRequired) unless roleId
+    return cb Boom.badRequest( i18n.errorRoleIdRequired) unless roleId
     settings = {}
     mongooseRestHelper.destroy @models.Role,roleId, settings,{}, cb
 
@@ -47,7 +43,7 @@ module.exports = class RoleMethods
   Create a new role.
   ###
   create:(_tenantId,objs = {}, options = {}, cb = ->) =>
-    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+    return cb Boom.badRequest( i18n.errorTenantIdRequired) unless _tenantId
 
     settings = {}
     objs._tenantId = mongooseRestHelper.asObjectId _tenantId
@@ -58,7 +54,7 @@ module.exports = class RoleMethods
   Updates a role.
   ###
   patch: (roleId, obj = {}, options = {}, cb = ->) =>
-    return cb fnUnprocessableEntity( i18n.errorRoleIdRequired) unless roleId
+    return cb Boom.badRequest( i18n.errorRoleIdRequired) unless roleId
 
     settings =
       exclude : UPDATE_EXCLUDEFIELDS

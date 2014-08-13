@@ -7,9 +7,6 @@ Boom = require 'boom'
 
 {isObjectId} = require 'mongodb-objectid-helper'
 
-fnUnprocessableEntity = (message = "",data) ->
-  return Boom.create 422, message, data
-
 ###
 Provides methods to interact with organizations.
 ###
@@ -25,7 +22,7 @@ module.exports = class OrganizationMethods
     Hoek.assert @models.Organization,i18n.assertOrganizationInModelsRequired
 
   all: (_tenantId, options = {}, cb = ->) =>
-    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+    return cb Boom.badRequest( i18n.errorTenantIdRequired) unless _tenantId
 
     settings = 
         baseQuery:
@@ -39,7 +36,7 @@ module.exports = class OrganizationMethods
   Looks up an organization by id.
   ###
   get: (organizationId, options =  {}, cb = ->) =>
-    return cb fnUnprocessableEntity( i18n.errorOrganizationIdRequired) unless organizationId
+    return cb Boom.badRequest( i18n.errorOrganizationIdRequired) unless organizationId
 
     mongooseRestHelper.getById @models.Organization,organizationId,null,options, cb
 
@@ -48,13 +45,13 @@ module.exports = class OrganizationMethods
   Completely destroys an organization.
   ###
   destroy: (organizationId,options = {}, cb = ->) =>
-    return cb fnUnprocessableEntity( i18n.errorOrganizationIdRequired) unless organizationId
+    return cb Boom.badRequest( i18n.errorOrganizationIdRequired) unless organizationId
     settings = {}
     mongooseRestHelper.destroy @models.Organization,organizationId, settings,{}, cb
 
   getByName: (_tenantId, name, options = {}, cb = ->) =>
-    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
-    return cb fnUnprocessableEntity( i18n.errorNameRequired) unless name
+    return cb Boom.badRequest( i18n.errorTenantIdRequired) unless _tenantId
+    return cb Boom.badRequest( i18n.errorNameRequired) unless name
 
     if _.isFunction(options)
       cb = options 
@@ -65,8 +62,8 @@ module.exports = class OrganizationMethods
       cb null, item
 
   getByNameOrId: (_tenantId, nameOrId, options = {},cb = ->) =>
-    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
-    return cb fnUnprocessableEntity( i18n.errorNameOrIdRequired) unless nameOrId
+    return cb Boom.badRequest( i18n.errorTenantIdRequired) unless _tenantId
+    return cb Boom.badRequest( i18n.errorNameOrIdRequired) unless nameOrId
 
     if _.isFunction(options)
       cb = options 
@@ -81,7 +78,7 @@ module.exports = class OrganizationMethods
   Patches an organization
   ###
   patch: (organizationId, obj = {}, options = {}, cb = ->) =>
-    return cb fnUnprocessableEntity( i18n.errorOrganizationIdRequired) unless organizationId
+    return cb Boom.badRequest( i18n.errorOrganizationIdRequired) unless organizationId
     settings =
       exclude : UPDATE_EXCLUDEFIELDS
     mongooseRestHelper.patch @models.Organization,organizationId, settings, obj, options, cb
@@ -91,7 +88,7 @@ module.exports = class OrganizationMethods
   Creates a new organization.
   ###
   create: (_tenantId, objs = {},options = {}, cb = ->) =>
-    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+    return cb Boom.badRequest( i18n.errorTenantIdRequired) unless _tenantId
 
     objs._tenantId = mongooseRestHelper.asObjectId _tenantId
 

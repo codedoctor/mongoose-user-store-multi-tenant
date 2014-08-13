@@ -38,7 +38,7 @@ module.exports = class UserMethods
   Retrieve all users for a specific _tenantId
   ###
   all:(_tenantId,options = {}, cb = ->) =>
-    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+    return cb Boom.badRequest( i18n.errorTenantIdRequired) unless _tenantId
 
     settings = 
         baseQuery:
@@ -53,7 +53,7 @@ module.exports = class UserMethods
   Retrieves a user by it's id.
   ###
   get: (userId,options = {}, cb = ->) =>
-    return cb fnUnprocessableEntity( i18n.errorUserIdRequired) unless userId
+    return cb Boom.badRequest( i18n.errorUserIdRequired) unless userId
     mongooseRestHelper.getById @models.User,userId,null,options, cb
 
   ###
@@ -80,7 +80,7 @@ module.exports = class UserMethods
   @option options [String] select the space separated fields to return, which default to all.
   ###
   getByUsernames:(_tenantId,usernames = [],options = {}, cb = ->) =>
-    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+    return cb Boom.badRequest( i18n.errorTenantIdRequired) unless _tenantId
 
     if _.isFunction(options)
       cb = options 
@@ -109,7 +109,7 @@ module.exports = class UserMethods
   @option options [String] select the space separated fields to return, which default to '_id username displayName selectedUserImage'.
   ###
   lookup: (_tenantId,q,options = {}, cb = ->) =>
-    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+    return cb Boom.badRequest( i18n.errorTenantIdRequired) unless _tenantId
 
     if _.isFunction(options)
       cb = options 
@@ -132,8 +132,8 @@ module.exports = class UserMethods
       cb null, new PageResult(users, users.length, 0, users.length)
 
   getByName: (_tenantId,name,options = {}, cb = ->) =>
-    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
-    return cb fnUnprocessableEntity( i18n.errorNameRequired) unless name
+    return cb Boom.badRequest( i18n.errorTenantIdRequired) unless _tenantId
+    return cb Boom.badRequest( i18n.errorNameRequired) unless name
 
     if _.isFunction(options)
       cb = options 
@@ -146,8 +146,8 @@ module.exports = class UserMethods
       cb null, user
 
   getByPrimaryEmail: (_tenantId,email, options = {}, cb = ->) =>
-    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
-    return cb fnUnprocessableEntity( i18n.errorEmailRequired) unless email
+    return cb Boom.badRequest( i18n.errorTenantIdRequired) unless _tenantId
+    return cb Boom.badRequest( i18n.errorEmailRequired) unless email
 
     if _.isFunction(options)
       cb = options 
@@ -160,7 +160,8 @@ module.exports = class UserMethods
       cb null, user
 
   getByNameOrId: (_tenantId,nameOrId,options = {}, cb = ->) =>
-    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+    return cb Boom.badRequest( i18n.errorTenantIdRequired) unless _tenantId
+    return cb Boom.badRequest( i18n.errorNameOrIdRequired) unless nameOrId
 
     if _.isFunction(options)
       cb = options 
@@ -173,7 +174,8 @@ module.exports = class UserMethods
       @getByName _tenantId,nameOrId, cb
 
   patch: (_tenantId,usernameOrId, obj = {},options = {}, cb = ->) =>
-    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+    return cb Boom.badRequest( i18n.errorTenantIdRequired) unless _tenantId
+    return cb Boom.badRequest( i18n.errorUsernameOrIdRequired) unless usernameOrId
 
     if _.isFunction(options)
       cb = options 
@@ -197,7 +199,8 @@ module.exports = class UserMethods
           cb null, user
 
   delete: (_tenantId,usernameOrId,options = {}, cb = ->) =>
-    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+    return cb Boom.badRequest( i18n.errorTenantIdRequired) unless _tenantId
+    return cb Boom.badRequest( i18n.errorUsernameOrIdRequired) unless usernameOrId
 
     if _.isFunction(options)
       cb = options 
@@ -218,7 +221,8 @@ module.exports = class UserMethods
         cb null, user
 
   destroy: (_tenantId,usernameOrId, options = {}, cb = ->) =>
-    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+    return cb Boom.badRequest( i18n.errorTenantIdRequired) unless _tenantId
+    return cb Boom.badRequest( i18n.errorUsernameOrIdRequired) unless usernameOrId
 
     if _.isFunction(options)
       cb = options 
@@ -233,7 +237,9 @@ module.exports = class UserMethods
         cb null, user
 
   setPassword: (_tenantId,usernameOrId, password,options = {}, cb = ->) =>
-    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+    return cb Boom.badRequest( i18n.errorTenantIdRequired) unless _tenantId
+    return cb Boom.badRequest( i18n.errorUsernameOrIdRequired) unless usernameOrId
+    return cb Boom.badRequest( i18n.errorPasswordRequired) unless password
 
     if _.isFunction(options)
       cb = options 
@@ -256,7 +262,8 @@ module.exports = class UserMethods
   Looks up a user by username or email.
   ###
   findUserByUsernameOrEmail: (_tenantId,usernameOrEmail, options = {}, cb = ->) =>
-    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+    return cb Boom.badRequest( i18n.errorTenantIdRequired) unless _tenantId
+    return cb Boom.badRequest( i18n.errorUsernameOrEmailRequired) unless usernameOrEmail
 
     if _.isFunction(options)
       cb = options 
@@ -281,7 +288,9 @@ module.exports = class UserMethods
   cb(null, user) in case of user not found, password not valid, or valid user
   ###
   validateUserByUsernameOrEmail: (_tenantId,usernameOrEmail, password, options = {}, cb = ->) =>
-    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+    return cb Boom.badRequest( i18n.errorTenantIdRequired) unless _tenantId
+    return cb Boom.badRequest( i18n.errorUsernameOrEmailRequired) unless usernameOrEmail
+    return cb Boom.badRequest( i18n.errorPasswordRequired) unless password
 
     if _.isFunction(options)
       cb = options 
@@ -312,7 +321,7 @@ module.exports = class UserMethods
   Creates a new user.
   ###
   create: (_tenantId,objs = {},options = {}, cb = ->) =>
-    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+    return cb Boom.badRequest( i18n.errorTenantIdRequired) unless _tenantId
 
     if _.isFunction(options)
       cb = options 
@@ -352,17 +361,17 @@ module.exports = class UserMethods
   @param {Object} profile The profile as defined here: http://passportjs.org/guide/user-profile.html
   ###
   getOrCreateUserFromProvider: (_tenantId,provider, v1, v2, profile,options = {}, cb = ->) =>
-    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+    return cb Boom.badRequest( i18n.errorTenantIdRequired) unless _tenantId
+    return cb fnUnprocessableEntity( i18n.errorProviderRequired) unless provider
+    return cb fnUnprocessableEntity( i18n.errorV1Required) unless v1
+    return cb fnUnprocessableEntity( i18n.errorProfileRequired) unless profile
+    return cb fnUnprocessableEntity( i18n.errorIdWithinProfileRequired) unless profile && profile.id
 
     if _.isFunction(options)
       cb = options 
       options = {}
 
-    return cb fnUnprocessableEntity( i18n.errorIdWithinProfileRequired) unless profile && profile.id
-
     _tenantId = mongooseRestHelper.asObjectId _tenantId
-
-    #console.log "PROFILE #{JSON.stringify(profile)} ENDPROFILE" 
 
     identityQuery =
       _tenantId : _tenantId
@@ -591,15 +600,15 @@ module.exports = class UserMethods
   @param {Object} profile The profile as defined here: http://passportjs.org/guide/user-profile.html
   ###
   addIdentityToUser: (userId,provider, v1, v2, profile,options = {}, cb = ->) =>
-    if _.isFunction(options)
-      cb = options 
-      options = {}
-
-    return cb fnUnprocessableEntity( i18n.errorUserIdRequired) unless userId
+    return cb Boom.badRequest( i18n.errorUserIdRequired) unless userId
     return cb fnUnprocessableEntity( i18n.errorProviderRequired) unless provider
     return cb fnUnprocessableEntity( i18n.errorV1Required) unless v1
     return cb fnUnprocessableEntity( i18n.errorProfileRequired) unless profile
     return cb fnUnprocessableEntity( i18n.errorIdWithinProfileRequired) unless profile && profile.id
+
+    if _.isFunction(options)
+      cb = options 
+      options = {}
 
     userId = mongooseRestHelper.asObjectId userId
     provider = provider.toLowerCase()
@@ -627,12 +636,12 @@ module.exports = class UserMethods
         cb null, user,newIdentity
 
   removeIdentityFromUser:(userId,identityId,options = {},cb = ->) =>
+    return cb Boom.badRequest( i18n.errorUserIdRequired) unless userId
+    return cb Boom.badRequest( i18n.errorIdentityIdRequired) unless identityId
+
     if _.isFunction(options)
       cb = options 
       options = {}
-
-    return cb fnUnprocessableEntity( i18n.errorUserIdRequired) unless userId
-    return cb fnUnprocessableEntity( i18n.errorIdentityIdRequired) unless identityId
 
     userId = mongooseRestHelper.asObjectId userId
     identityId = mongooseRestHelper.asObjectId identityId
@@ -649,14 +658,14 @@ module.exports = class UserMethods
         cb null, user
 
   addRoles:(userId,roles,options = {},cb = ->) =>
+    roles = [roles] if _.isString(roles)
+
+    return cb Boom.badRequest( i18n.errorUserIdRequired) unless email
+    return cb Boom.badRequest( i18n.errorRolesRequired) unless roles && _.isArray(roles) && roles.length > 0
+
     if _.isFunction(options)
       cb = options 
       options = {}
-
-    roles = [roles] if _.isString(roles)
-
-    return cb fnUnprocessableEntity( i18n.errorUserIdRequired) unless email
-    return cb fnUnprocessableEntity( i18n.errorRolesRequired) unless roles && _.isArray(roles) && roles.length > 0
 
     userId = mongooseRestHelper.asObjectId userId
 
@@ -669,14 +678,15 @@ module.exports = class UserMethods
         cb null,user.roles, user
 
   removeRoles:(userId,roles,options = {},cb = ->) =>
+    roles = [roles] if _.isString(roles)
+
+    return cb Boom.badRequest( i18n.errorUserIdRequired) unless email
+    return cb Boom.badRequest( i18n.errorRolesRequired) unless roles && _.isArray(roles) && roles.length > 0
+
     if _.isFunction(options)
       cb = options 
       options = {}
 
-    roles = [roles] if _.isString(roles)
-
-    return cb fnUnprocessableEntity( i18n.errorUserIdRequired) unless email
-    return cb fnUnprocessableEntity( i18n.errorRolesRequired) unless roles && _.isArray(roles) && roles.length > 0
 
     userId = mongooseRestHelper.asObjectId userId
 
@@ -691,13 +701,12 @@ module.exports = class UserMethods
   resetPasswordTokenLength = 10
 
   resetPassword: (_tenantId,email,options = {},cb = ->) =>
-    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+    return cb Boom.badRequest( i18n.errorTenantIdRequired) unless _tenantId
+    return cb Boom.badRequest( i18n.errorEmailRequired) unless email
 
     if _.isFunction(options)
       cb = options 
       options = {}
-
-    return cb fnUnprocessableEntity( i18n.errorEmailRequired) unless email
 
     @getByPrimaryEmail _tenantId,email, (err,user) =>
       return cb err if err
@@ -715,14 +724,13 @@ module.exports = class UserMethods
 
   #p0qEeKBoh25031326eefa65c0000000006TWlhZKbLjn
   resetPasswordToken: (_tenantId,token,password,options = {},cb = ->) =>
-    return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
+    return cb Boom.badRequest( i18n.errorTenantIdRequired) unless _tenantId
+    return cb Boom.badRequest( i18n.errorTokenRequired) unless token
+    return cb Boom.badRequest( i18n.errorPasswordRequired) unless password
 
     if _.isFunction(options)
       cb = options 
       options = {}
-
-    return cb fnUnprocessableEntity( i18n.errorTokenRequired) unless token
-    return cb fnUnprocessableEntity( i18n.errorPasswordRequired) unless password
 
     userId = token.substr(resetPasswordTokenLength,token.length - 2 * resetPasswordTokenLength)
     userId = mongooseRestHelper.asObjectId userId
@@ -732,9 +740,9 @@ module.exports = class UserMethods
         return cb err if err
         return cb Boom.notFound("#{i18n.prefixErrorCouldNotFindUser} #{userId}") unless user
 
-        return cb fnUnprocessableEntity( i18n.errorTokenRequired) unless user.resetPasswordToken
-        return cb fnUnprocessableEntity( i18n.errorTokenInvalid) unless (user.resetPasswordToken.token || '').toLowerCase() is token.toLowerCase()
-        return cb fnUnprocessableEntity( i18n.errorValidTillFailed) unless user.resetPasswordToken.validTill && user.resetPasswordToken.validTill.isAfter(new Date())
+        return cb Boom.badRequest( i18n.errorTokenRequired) unless user.resetPasswordToken
+        return cb Boom.badRequest( i18n.errorTokenInvalid) unless (user.resetPasswordToken.token || '').toLowerCase() is token.toLowerCase()
+        return cb Boom.badRequest( i18n.errorValidTillFailed) unless user.resetPasswordToken.validTill && user.resetPasswordToken.validTill.isAfter(new Date())
 
         user.resetPasswordToken = null
         #user.markModified 'resetPasswordToken'
@@ -745,12 +753,13 @@ module.exports = class UserMethods
 
 
   addEmail:(userId,email,isValidated,options = {},cb = ->) =>
+    return cb Boom.badRequest( i18n.errorUserIdRequired) unless userId
+    return cb Boom.badRequest( i18n.errorEmailRequired) unless email
+
     if _.isFunction(options)
       cb = options 
       options = {}
 
-    return cb fnUnprocessableEntity( i18n.errorUserIdRequired) unless userId
-    return cb fnUnprocessableEntity( i18n.errorEmailRequired) unless email
     userId = mongooseRestHelper.asObjectId userId
 
     @models.User.findOne _id: userId , (err, user) =>
@@ -763,12 +772,13 @@ module.exports = class UserMethods
         cb null,user.emails, user
 
   removeEmail:(userId,email,options = {},cb = ->) =>
+    return cb Boom.badRequest( i18n.errorUserIdRequired) unless userId
+    return cb Boom.badRequest( i18n.errorEmailRequired) unless email
+
     if _.isFunction(options)
       cb = options 
       options = {}
 
-    return cb fnUnprocessableEntity( i18n.errorUserIdRequired) unless userId
-    return cb fnUnprocessableEntity( i18n.errorEmailRequired) unless email
     userId = mongooseRestHelper.asObjectId userId
 
     @models.User.findOne _id: userId , (err, user) =>
