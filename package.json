@@ -2,7 +2,7 @@
   "author": "Martin Wawrusch <martin@wawrusch.com> (http://martinatsunset.com)",
   "name": "mongoose-user-store-multi-tenant",
   "description": "A bunch of mongoose schemas to implement identity management (users, accesstokens, oauth apps)",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "lib/index.js",
   "repository": {
     "type": "git",
@@ -39,9 +39,8 @@
     "mongoose-plugins-timestamp": "0.2.x",
     "mongoose-rest-helper": "1.0.x",
     "passgen": "1.0.1",
-    "underscore" : "1.6.0",
+    "underscore": "1.6.0",
     "bcryptjs": "2.0.2",
-
     "underscore-ext": "0.2.0",
     "mongodb-objectid-helper": "0.2.0"
   },
@@ -68,7 +67,6 @@
     "mongoskin": "1.4.4",
     "should": "4.0.4"
   },
-
   "bugs": {
     "url": "http://github.com/codedoctor/mongoose-user-store-multi-tenant/issues"
   },
