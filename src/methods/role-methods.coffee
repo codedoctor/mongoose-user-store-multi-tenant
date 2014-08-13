@@ -13,6 +13,7 @@ module.exports = class RoleMethods
 
   constructor:(@models) ->
     Hoek.assert @models,i18n.assertModelsRequired
+    Hoek.assert @models.Role,i18n.assertRoleInModelsRequired
 
   all: (_tenantId,options = {},cb = ->) =>
     return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId

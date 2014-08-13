@@ -19,6 +19,8 @@ module.exports = class EntityMethods
   ###
   constructor:(@models) ->
     Hoek.assert @models,i18n.assertModelsRequired
+    Hoek.assert @models.User,i18n.assertUserInModelsRequired
+    Hoek.assert @models.Organization,i18n.assertOrganizationInModelsRequired
 
   ###
   Looks up a user or organization by id. Users are first.

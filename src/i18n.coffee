@@ -2,11 +2,11 @@
 Translatable and non translatable messages for this module.
 ###
 module.exports = 
-  assertModelsRequired: "Required parameter '@models' is missing."
-  assertUserMethodsRequired: "Required parameter 'userMethods' is missing."
-
-  #assertOauthAccessGrantInModels : "@models must contain an 'OauthAccessGrant' model."
-  #assertOauthScopeMethods: "Required parameter '@oauthScopeMethods' parameter is missing"
+  assertModelsRequired: "The required parameter '@models' is missing."
+  assertUserMethodsRequired: "The required parameter 'userMethods' is missing."
+  assertUserInModelsRequired: "The required property 'User' is missing in '@models'"
+  assertRoleInModelsRequired: "The required property 'Role' is missing in '@models"
+  assertOrganizationInModelsRequired: "The required property 'Organization' is missing in '@models"
 
   errorEmailRequired: "The required parameter 'email' is missing."
   errorIdWithinProfileRequired: "An 'id' parameter within 'profile' is required."

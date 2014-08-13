@@ -32,6 +32,7 @@ module.exports = class UserMethods
   ###
   constructor:(@models) ->
     Hoek.assert @models,i18n.assertModelsRequired
+    Hoek.assert @models.User,i18n.assertUserInModelsRequired
 
   ###
   Retrieve all users for a specific _tenantId
