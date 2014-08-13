@@ -15,8 +15,9 @@ Provides methods to interact with organizations.
 ###
 module.exports = class OrganizationMethods
   UPDATE_EXCLUDEFIELDS = ['_id','createdByUserId','createdAt']
+
   ###
-  Initializes a new instance of the @see ScottyMethods class.
+  Initializes a new instance of the @see OrganizationMethods class.
   @param {Object} models A collection of models that can be used.
   ###
   constructor:(@models) ->

@@ -14,7 +14,7 @@ Provides methods to set up admin users.
 module.exports = class AdminMethods
 
   ###
-  Initializes a new instance of the @see ScottyMethods class.
+  Initializes a new instance of the @see AdminMethods class.
   @param {Object} models A collection of models that can be used.
   ###
   constructor:(@models, @userMethods) ->
