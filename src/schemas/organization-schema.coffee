@@ -1,11 +1,14 @@
 _ = require 'underscore'
 mongoose = require 'mongoose'
-errors = require 'some-errors'
 Hoek = require 'hoek'
 Boom = require 'boom'
+i18n = require '../i18n'
+mongooseRestHelper = require 'mongoose-rest-helper'
+
+fnUnprocessableEntity = (message = "",data) ->
+  return Boom.create 422, message, data
 
 pluginAccessibleBy = require "mongoose-plugins-accessible-by"
-
 pluginTimestamp = require "mongoose-plugins-timestamp"
 pluginCreatedBy = require "mongoose-plugins-created-by"
 pluginTagsSimple = require "mongoose-plugins-tags-simple"
@@ -62,22 +65,29 @@ OrganizationSchema.plugin pluginDeleteParanoid.deleteParanoid
 OrganizationSchema.plugin pluginAccessibleBy.accessibleBy, defaultIsPublic : true
 OrganizationSchema.plugin pluginResourceLimits.resourceLimits
 
-
+###
+@TODO CHeck if needed at all
+###
 
 OrganizationSchema.statics.findOneValidate = (organizationId, actor, role, cb = ->) ->
-  return cb new Error("organizationId is a required parameter") unless organizationId
-  organizationId = organizationId.toString()
+  return cb fnUnprocessableEntity( i18n.errorOrganizationIdRequired) unless organizationId
+
+  ###
+  @TODO BUG FIX - TEST
+  ###
+  organizationId = mongooseRestHelper.asObjectId organizationId
   Organization = @
 
   Organization.findOne _id : organizationId, (err, item) =>
     return cb err if err
-    return cb new errors.NotFound("/organizations/#{organizationId}") unless item
-    #console.log "AND THE WINNER IS: #{JSON.stringify(item.accessibleBy)}"
+
+    return cb Boom.notFound("#{i18n.prefixErrorCouldNotFindOrganization} #{organizationId}") unless item
+
     return cb null, item if item.canPublicAccess(role)
     return cb null, item if actor && item.canActorAccess(actor, role)
     return cb null, item if actor && item.createdBy.actorId.toString() is actor.actorId.toString()
 
-    cb new errors.AccessDenied("/organizations/#{organizationId}")
+    cb Boom.forbidden("#{i18n.prefixErrorForbiddenForOrganization} #{organizationId}") 
 
 
 OrganizationSchema.statics.findOneValidateRead = (organizationId, actor, cb = ->) ->

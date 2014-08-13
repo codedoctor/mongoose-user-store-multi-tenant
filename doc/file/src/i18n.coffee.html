@@ -45,11 +45,19 @@
     <pre><code class='coffeescript'>{
   assertModelsRequired: &quot;Required parameter &#39;@models&#39; is missing.&quot;,
   assertUserMethodsRequired: &quot;Required parameter &#39;userMethods&#39; is missing.&quot;,
-  errorTenantIdRequired: &quot;Required parameter &#39;_tenantId&#39; is missing.&quot;,
-  errorUsernameRequired: &quot;Required parameter &#39;username&#39; is missing.&quot;,
   errorEmailRequired: &quot;Required parameter &#39;email&#39; is missing.&quot;,
   errorPasswordRequired: &quot;Required parameter &#39;password&#39; is missing.&quot;,
-  prefixErrorCouldNotFindUser: &quot;Could not find user with id&quot;
+  errorRolesRequired: &quot;Required parameter &#39;roles&#39; is either missing, not an array or does not contain any items.&quot;,
+  errorTenantIdRequired: &quot;Required parameter &#39;_tenantId&#39; is missing.&quot;,
+  errorTokenRequired: &quot;Required parameter &#39;token&#39; is missing.&quot;,
+  errorUserIdRequired: &quot;Required parameter &#39;userId&#39; is missing.&quot;,
+  errorUsernameRequired: &quot;Required parameter &#39;username&#39; is missing.&quot;,
+  errorOrganizationIdRequired: &quot;Required parameter &#39;organizationId&#39; is missing.&quot;,
+  errorTokenInvalid: &quot;The supplied token is invalid.&quot;,
+  errorValidTillFailed: &quot;The supplied token is expired.&quot;,
+  prefixErrorForbiddenForOrganization: &quot;You lack the credentials to access organization&quot;,
+  prefixErrorCouldNotFindUser: &quot;Could not find user with&quot;,
+  prefixErrorCouldNotFindOrganization: &quot;Could not find organization with&quot;
 }</code></pre>
     <div class='docstring'>
   <p>Translatable and non translatable messages for this module.</p>
@@ -60,7 +68,7 @@
 </dl>
     </div>
     <div id='footer'>
-  August 13, 14 00:00:53 by
+  August 13, 14 00:22:48 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>

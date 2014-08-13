@@ -5,7 +5,6 @@ mongooseRestHelper = require 'mongoose-rest-helper'
 
 i18n = require '../i18n'
 
-
 fnUnprocessableEntity = (message = "",data) ->
   return Boom.create 422, message, data
 

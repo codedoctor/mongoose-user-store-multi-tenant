@@ -43,7 +43,6 @@
     "bcryptjs": "2.0.2",
 
     "underscore-ext": "0.2.0",
-    "some-errors": "0.2.0",
     "mongodb-objectid-helper": "0.2.0"
   },
   "peerDependencies": {

@@ -1,7 +1,6 @@
 _ = require 'underscore-ext'
 bcrypt = require 'bcryptjs'
 Boom = require 'boom'
-errors = require 'some-errors'
 Hoek = require 'hoek'
 mongooseRestHelper = require 'mongoose-rest-helper'
 passgen = require 'passgen'
@@ -67,11 +66,11 @@ module.exports = class UserMethods
       cb = options 
       options = {}
 
-    @models.User.find({}).where('_id').in(idList).exec (err, items) =>
+    @models.User.find({}).where('_id').in(idList).exec (err, users) =>
       return cb err if err
-      items or= []
+      users or= []
 
-      cb null, new PageResult(items, items.length, 0, items.length)
+      cb null, new PageResult(users, users.length, 0, users.length)
 
   ###
   @TODO mongooseRest
@@ -94,11 +93,11 @@ module.exports = class UserMethods
     query = @models.User.find({_tenantId : _tenantId}).where('username').in(usernames)
     query = query.select(options.select) if options.select && options.select.length > 0
 
-    query.exec (err, items) =>
+    query.exec (err, users) =>
       return cb err if err
-      items or= []
+      users or= []
 
-      cb null, new PageResult(items, items.length, 0, usernames.length)
+      cb null, new PageResult(users, users.length, 0, usernames.length)
 
 
   ###
@@ -127,11 +126,11 @@ module.exports = class UserMethods
     r = new RegExp("^#{q}")
 
     #
-    @models.User.find({_tenantId : _tenantId,username : r }).select(options.select).sort(options.sortOrder).limit(options.limit).exec (err, items) =>
+    @models.User.find({_tenantId : _tenantId,username : r }).select(options.select).sort(options.sortOrder).limit(options.limit).exec (err, users) =>
       return cb err if err
-      items or= []
+      users or= []
 
-      cb null, new PageResult(items, items.length, 0, items.length)
+      cb null, new PageResult(users, users.length, 0, users.length)
 
   getByName: (_tenantId,name,options = {}, cb = ->) =>
     return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
@@ -142,9 +141,9 @@ module.exports = class UserMethods
 
     _tenantId = mongooseRestHelper.asObjectId _tenantId
     name = name.toLowerCase()
-    @models.User.findOne {_tenantId : _tenantId,username: name }, (err, item) =>
+    @models.User.findOne {_tenantId : _tenantId,username: name }, (err, user) =>
       return cb err if err
-      cb null, item
+      cb null, user
 
   getByPrimaryEmail: (_tenantId,email, options = {}, cb = ->) =>
     return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
@@ -155,9 +154,9 @@ module.exports = class UserMethods
 
     _tenantId = mongooseRestHelper.asObjectId _tenantId
     email = email.toLowerCase()
-    @models.User.findOne {_tenantId : _tenantId,primaryEmail: email} , (err, item) =>
+    @models.User.findOne {_tenantId : _tenantId,primaryEmail: email} , (err, user) =>
       return cb err if err
-      cb null, item
+      cb null, user
 
   getByNameOrId: (_tenantId,nameOrId,options = {}, cb = ->) =>
     return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
@@ -180,21 +179,21 @@ module.exports = class UserMethods
       options = {}
 
     _tenantId = mongooseRestHelper.asObjectId _tenantId
-    @getByNameOrId _tenantId,usernameOrId, (err, item) =>
+    @getByNameOrId _tenantId,usernameOrId, (err, user) =>
       # CHECK ACCESS RIGHTS. If actor is not the creator
       return cb err if err
-      return cb new errors.NotFound("/users/#{usernameOrId}") unless item
+      return cb Boom.notFound("#{i18n.prefixErrorCouldNotFindUser} #{usernameOrId}") unless user
 
-      _.extendFiltered item, UPDATE_FIELDS_FULL, obj
-      item.save (err) =>
+      _.extendFiltered user, UPDATE_FIELDS_FULL, obj
+      user.save (err) =>
         return cb err if err
 
         if obj.password
-          @setPassword _tenantId,usernameOrId,obj.password, {}, (err,item2) =>
+          @setPassword _tenantId,usernameOrId,obj.password, {}, (err,user2) =>
             return cb err if err
-            cb null, item
+            cb null, user
         else
-          cb null, item
+          cb null, user
 
   delete: (_tenantId,usernameOrId,options = {}, cb = ->) =>
     return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
@@ -204,18 +203,18 @@ module.exports = class UserMethods
       options = {}
 
     _tenantId = mongooseRestHelper.asObjectId _tenantId
-    @getByNameOrId _tenantId,usernameOrId, (err, item) =>
+    @getByNameOrId _tenantId,usernameOrId, (err, user) =>
 
       return cb err if err
-      return cb new errors.NotFound("/users/#{usernameOrId}") unless item
+      return cb Boom.notFound("#{i18n.prefixErrorCouldNotFindUser} #{usernameOrId}") unless user
 
-      return cb null if item.isDeleted
+      return cb null if user.isDeleted
 
-      item.isDeleted = true
-      item.deletedAt = new Date()
-      item.save (err) =>
+      user.isDeleted = true
+      user.deletedAt = new Date()
+      user.save (err) =>
         return cb err if err
-        cb null, item
+        cb null, user
 
   destroy: (_tenantId,usernameOrId, options = {}, cb = ->) =>
     return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
@@ -224,13 +223,13 @@ module.exports = class UserMethods
       cb = options 
       options = {}
 
-    @getByNameOrId _tenantId,usernameOrId, {}, (err, item) =>
+    @getByNameOrId _tenantId,usernameOrId, {}, (err, user) =>
       return cb err if err
-      return cb new errors.NotFound("/users/#{usernameOrId}") unless item
+      return cb Boom.notFound("#{i18n.prefixErrorCouldNotFindUser} #{usernameOrId}") unless user
 
-      item.remove (err) =>
+      user.remove (err) =>
         return cb err if err
-        cb null, item
+        cb null, user
 
   setPassword: (_tenantId,usernameOrId, password,options = {}, cb = ->) =>
     return cb fnUnprocessableEntity( i18n.errorTenantIdRequired) unless _tenantId
@@ -239,18 +238,18 @@ module.exports = class UserMethods
       cb = options 
       options = {}
 
-    @getByNameOrId _tenantId,usernameOrId, {}, (err, item) =>
+    @getByNameOrId _tenantId,usernameOrId, {}, (err, user) =>
       return cb err if err
       # @TODO don't return url here
-      return cb new errors.NotFound("/users/#{usernameOrId}") unless item && !item.isDeleted
+      return cb Boom.notFound("#{i18n.prefixErrorCouldNotFindUser} #{usernameOrId}") unless user && !user.isDeleted
 
       @_hashPassword password, (err, hash) =>
         return cb err if err
-        item.password = hash
+        user.password = hash
 
-        item.save (err) =>
+        user.save (err) =>
           return cb err if err
-          cb null, item
+          cb null, user
 
   ###
   Looks up a user by username or email.
@@ -265,15 +264,15 @@ module.exports = class UserMethods
     _tenantId = mongooseRestHelper.asObjectId _tenantId
     usernameOrEmail = usernameOrEmail.toLowerCase()
 
-    @models.User.findOne {_tenantId : _tenantId,username: usernameOrEmail} , (err, item) =>
+    @models.User.findOne {_tenantId : _tenantId,username: usernameOrEmail} , (err, user) =>
       return cb err if err
-      return cb(null, item) if item
+      return cb(null, user) if user
 
       # Be smart, only try email if we have something that looks like an email.
 
-      @models.User.findOne {_tenantId : _tenantId,primaryEmail: usernameOrEmail }, (err, item) =>
+      @models.User.findOne {_tenantId : _tenantId,primaryEmail: usernameOrEmail }, (err, user) =>
         return cb err if err
-        cb(null, item)
+        cb(null, user)
 
   ###
   Looks up the user, if found validates against password.
@@ -370,17 +369,17 @@ module.exports = class UserMethods
       'identities.key': profile.id
 
     isNew = false
-    @models.User.findOne identityQuery , (err, item) =>
+    @models.User.findOne identityQuery , (err, user) =>
       return cb err if err
 
-      if item
-        for identity in item.identities
+      if user
+        for identity in user.identities
           if identity.provider is provider
             identity.v1 = v1
             identity.v2 = v2
-        item.save (err) =>
+        user.save (err) =>
           return cb err if err
-          cb null, item, isNew : isNew
+          cb null, user, isNew : isNew
 
       else
         isNew = true
@@ -389,9 +388,9 @@ module.exports = class UserMethods
 
         pusername = profile.username || "fb#{profile.id}"
 
-        @models.User.findOne {_tenantId : _tenantId,username : pusername} , (err,itemXX) =>
+        @models.User.findOne {_tenantId : _tenantId,username : pusername} , (err,userXX) =>
           return cb err if err
-          isUserNameValid = !itemXX  #valid if it does not exist
+          isUserNameValid = !userXX  #valid if it does not exist
 
 
           # PROFILE DATA:
@@ -460,13 +459,13 @@ module.exports = class UserMethods
 
           ###
           # TODO: Check for existance here, try to keep username
-          item = new @models.User
-          item._tenantId = _tenantId
-          item.username = (if isUserNameValid then pusername else pusername + passgen.create(4)).toLowerCase()
-          item.displayName = profile.displayName || item.username || pusername
-          item.data =  {} #profile._json
-          item.description = profile.description || ''
-          item.title = ""
+          user = new @models.User
+          user._tenantId = _tenantId
+          user.username = (if isUserNameValid then pusername else pusername + passgen.create(4)).toLowerCase()
+          user.displayName = profile.displayName || user.username || pusername
+          user.data =  {} #profile._json
+          user.description = profile.description || ''
+          user.title = ""
 
           # Handling Images
           # Filter out all the images first
@@ -476,22 +475,22 @@ module.exports = class UserMethods
 
           # TODO: Add gravatar perhaps as well?
           for imageUrl in images
-            item.userImages.push # new @models.UserImage
+            user.userImages.push # new @models.UserImage
               url : imageUrl
               # TODO: Add type here.
 
           # Twitter first
           if profile.profile_image_url && profile.profile_image_url.length > 5
-            item.selectedUserImage = profile.profile_image_url
+            user.selectedUserImage = profile.profile_image_url
           else
             # Set the selected user image, be radical about it.
-            item.selectedUserImage = images[0] if images.length > 0
+            user.selectedUserImage = images[0] if images.length > 0
 
           if provider is "facebook" && profile.profileUrl
 
 
 
-            item.profileLinks.push # new @models.UserProfile
+            user.profileLinks.push # new @models.UserProfile
               linkUrl : profile.profileUrl
               linkIdentifier: profile.id
               provider : provider
@@ -501,7 +500,7 @@ module.exports = class UserMethods
               isPublic: true
 
           if provider is "twitter" 
-            item.profileLinks.push # new @models.UserProfile
+            user.profileLinks.push # new @models.UserProfile
               linkUrl : "https://twitter.com/#{profile.username}"
               linkIdentifier: profile.username
               provider : provider
@@ -520,22 +519,22 @@ module.exports = class UserMethods
 
           # emails
           for email in emails
-            item.emails.push new #@models.Email
+            user.emails.push new #@models.Email
               email : email.toLowerCase()
               isVerified : true # We assume so, because it comes from a social network
               sendNotifications : false # Dunno what this is good for.
-          item.primaryEmail = item.emails[0].email.toLowerCase() if item.emails.length > 0
+          user.primaryEmail = user.emails[0].email.toLowerCase() if user.emails.length > 0
 
-          item.location = profile._json?.location?.name
-          item.needsInit = !profile.username || !item.primaryEmail || item.primaryEmail.toLowerCase().indexOf("facebook.com") > 0
+          user.location = profile._json?.location?.name
+          user.needsInit = !profile.username || !user.primaryEmail || user.primaryEmail.toLowerCase().indexOf("facebook.com") > 0
           
-          #item.needsInit = true
+          #user.needsInit = true
 
-          item.gender = profile.gender
-          item.timezone = profile._json?.timezone
-          item.locale = profile._json?.locale
-          item.verified = profile._json?.verified
-          item.roles = ['user-needs-setup']
+          user.gender = profile.gender
+          user.timezone = profile._json?.timezone
+          user.locale = profile._json?.locale
+          user.verified = profile._json?.verified
+          user.roles = ['user-needs-setup']
 
           newIdentity = #new @models.UserIdentity
             provider: provider
@@ -543,14 +542,14 @@ module.exports = class UserMethods
             v1 : v1
             v2 : v2
             providerType: "oauth"
-            username : item.username
-            displayName : item.displayName
-            profileImage : item.selectedUserImage
-          item.identities.push newIdentity
+            username : user.username
+            displayName : user.displayName
+            profileImage : user.selectedUserImage
+          user.identities.push newIdentity
             # More stuff
-          item.save (err) =>
+          user.save (err) =>
             return cb err if err
-            cb null, item, isNew : isNew,newIdentity
+            cb null, user, isNew : isNew,newIdentity
 
   _usernameFromProfile: (profile) =>
     profile.username || ''
@@ -603,11 +602,11 @@ module.exports = class UserMethods
     userId = mongooseRestHelper.asObjectId userId
     provider = provider.toLowerCase()
 
-    @models.User.findOne _id: userId , (err, item) =>
+    @models.User.findOne _id: userId , (err, user) =>
       return cb err if err
-      return cb Boom.notFound("#{i18n.prefixErrorCouldNotFindUser} #{userId}") unless item
+      return cb Boom.notFound("#{i18n.prefixErrorCouldNotFindUser} #{userId}") unless user
 
-      existing = _.find item.identities, (x) -> x.provider is provider
+      existing = _.find user.identities, (x) -> x.provider is provider
       existing.remove() if existing
 
       newIdentity = #new @models.UserIdentity
@@ -620,10 +619,10 @@ module.exports = class UserMethods
         displayName : @_displayNameFromProfile(profile)
         profileImage : @_profileImageFromProfile(profile)
       
-      item.identities.push newIdentity
-      item.save (err) =>
+      user.identities.push newIdentity
+      user.save (err) =>
         return cb err if err
-        cb null, item,newIdentity
+        cb null, user,newIdentity
 
   removeIdentityFromUser:(userId,identityId,options = {},cb = ->) =>
     if _.isFunction(options)
@@ -635,50 +634,56 @@ module.exports = class UserMethods
     userId = mongooseRestHelper.asObjectId userId
     identityId = mongooseRestHelper.asObjectId identityId
 
-    @models.User.findOne _id: userId , (err, item) =>
+    @models.User.findOne _id: userId , (err, user) =>
       return cb err if err
-      return cb Boom.notFound("#{i18n.prefixErrorCouldNotFindUser} #{userId}") unless item
+      return cb Boom.notFound("#{i18n.prefixErrorCouldNotFindUser} #{userId}") unless user
 
-      existing = item.identities.id(identityId)
+      existing = user.identities.id(identityId)
       existing.remove() if existing
 
-      item.save (err) =>
+      user.save (err) =>
         return cb err if err
-        cb null, item
+        cb null, user
 
   addRoles:(userId,roles,options = {},cb = ->) =>
     if _.isFunction(options)
       cb = options 
       options = {}
 
-    return cb errors.UnprocessableEntity("userId") unless userId
-    return cb errors.UnprocessableEntity("roles") unless roles && roles.length > 0
+    roles = [roles] if _.isString(roles)
+
+    return cb fnUnprocessableEntity( i18n.errorUserIdRequired) unless email
+    return cb fnUnprocessableEntity( i18n.errorRolesRequired) unless roles && _.isArray(roles) && roles.length > 0
+
     userId = mongooseRestHelper.asObjectId userId
 
-    @models.User.findOne _id: userId , (err, item) =>
+    @models.User.findOne _id: userId , (err, user) =>
       return cb err if err
-      return cb Boom.notFound("#{i18n.prefixErrorCouldNotFindUser} #{userId}") unless item
-      item.roles = _.union(item.roles || [],roles)
-      item.save (err) =>
+      return cb Boom.notFound("#{i18n.prefixErrorCouldNotFindUser} #{userId}") unless user
+      user.roles = _.union(user.roles || [],roles)
+      user.save (err) =>
         return cb err if err
-        cb null,item.roles, item
+        cb null,user.roles, user
 
   removeRoles:(userId,roles,options = {},cb = ->) =>
     if _.isFunction(options)
       cb = options 
       options = {}
 
-    return cb errors.UnprocessableEntity("userId") unless userId
-    return cb errors.UnprocessableEntity("roles") unless roles && roles.length > 0
+    roles = [roles] if _.isString(roles)
+
+    return cb fnUnprocessableEntity( i18n.errorUserIdRequired) unless email
+    return cb fnUnprocessableEntity( i18n.errorRolesRequired) unless roles && _.isArray(roles) && roles.length > 0
+
     userId = mongooseRestHelper.asObjectId userId
 
-    @models.User.findOne _id: userId , (err, item) =>
+    @models.User.findOne _id: userId , (err, user) =>
       return cb err if err
-      return cb Boom.notFound("#{i18n.prefixErrorCouldNotFindUser} #{userId}") unless item
-      item.roles = _.difference(item.roles || [],roles)
-      item.save (err) =>
+      return cb Boom.notFound("#{i18n.prefixErrorCouldNotFindUser} #{userId}") unless user
+      user.roles = _.difference(user.roles || [],roles)
+      user.save (err) =>
         return cb err if err
-        cb null,item.roles, item
+        cb null,user.roles, user
 
   resetPasswordTokenLength = 10
 
@@ -689,7 +694,8 @@ module.exports = class UserMethods
       cb = options 
       options = {}
 
-    return cb new errors.UnprocessableEntity("email") unless email
+    return cb fnUnprocessableEntity( i18n.errorEmailRequired) unless email
+
     @getByPrimaryEmail _tenantId,email, (err,user) =>
       return cb err if err
       return cb Boom.notFound("#{i18n.prefixErrorCouldNotFindUser} #{email}") unless user
@@ -712,8 +718,8 @@ module.exports = class UserMethods
       cb = options 
       options = {}
 
-    return cb errors.UnprocessableEntity("token") unless token
-    return cb errors.UnprocessableEntity("password") unless password
+    return cb fnUnprocessableEntity( i18n.errorTokenRequired) unless token
+    return cb fnUnprocessableEntity( i18n.errorPasswordRequired) unless password
 
     userId = token.substr(resetPasswordTokenLength,token.length - 2 * resetPasswordTokenLength)
     userId = mongooseRestHelper.asObjectId userId
@@ -723,9 +729,10 @@ module.exports = class UserMethods
         return cb err if err
         return cb Boom.notFound("#{i18n.prefixErrorCouldNotFindUser} #{userId}") unless user
 
-        return cb new errors.UnprocessableEntity('token') unless user.resetPasswordToken
-        return cb new errors.UnprocessableEntity('token') unless (user.resetPasswordToken.token || '').toLowerCase() is token.toLowerCase()
-        return cb new errors.UnprocessableEntity('validTill') unless user.resetPasswordToken.validTill && user.resetPasswordToken.validTill.isAfter(new Date())
+        return cb fnUnprocessableEntity( i18n.errorTokenRequired) unless user.resetPasswordToken
+        return cb fnUnprocessableEntity( i18n.errorTokenInvalid) unless (user.resetPasswordToken.token || '').toLowerCase() is token.toLowerCase()
+        return cb fnUnprocessableEntity( i18n.errorValidTillFailed) unless user.resetPasswordToken.validTill && user.resetPasswordToken.validTill.isAfter(new Date())
+
         user.resetPasswordToken = null
         #user.markModified 'resetPasswordToken'
         user.password = hash
@@ -739,33 +746,33 @@ module.exports = class UserMethods
       cb = options 
       options = {}
 
-    return cb errors.UnprocessableEntity("userId") unless userId
-    return cb errors.UnprocessableEntity("email") unless email
+    return cb fnUnprocessableEntity( i18n.errorUserIdRequired) unless userId
+    return cb fnUnprocessableEntity( i18n.errorEmailRequired) unless email
     userId = mongooseRestHelper.asObjectId userId
 
-    @models.User.findOne _id: userId , (err, item) =>
+    @models.User.findOne _id: userId , (err, user) =>
       return cb err if err
-      return cb Boom.notFound("#{i18n.prefixErrorCouldNotFindUser} #{userId}") unless item
+      return cb Boom.notFound("#{i18n.prefixErrorCouldNotFindUser} #{userId}") unless user
 
-      item.emails = _.union(item.emails || [],[email])
-      item.save (err) =>
+      user.emails = _.union(user.emails || [],[email])
+      user.save (err) =>
         return cb err if err
-        cb null,item.emails, item
+        cb null,user.emails, user
 
   removeEmail:(userId,email,options = {},cb = ->) =>
     if _.isFunction(options)
       cb = options 
       options = {}
 
-    return cb new errors.UnprocessableEntity("userId") unless userId
-    return cb new errors.UnprocessableEntity("email") unless roles && roles.length > 0
+    return cb fnUnprocessableEntity( i18n.errorUserIdRequired) unless userId
+    return cb fnUnprocessableEntity( i18n.errorEmailRequired) unless email
     userId = mongooseRestHelper.asObjectId userId
 
-    @models.User.findOne _id: userId , (err, item) =>
+    @models.User.findOne _id: userId , (err, user) =>
       return cb err if err
-      return cb Boom.notFound("#{i18n.prefixErrorCouldNotFindUser} #{userId}") unless item
-      item.emails = _.difference(item.emails || [],[email])
-      item.save (err) =>
+      return cb Boom.notFound("#{i18n.prefixErrorCouldNotFindUser} #{userId}") unless user
+      user.emails = _.difference(user.emails || [],[email])
+      user.save (err) =>
         return cb err if err
-        cb null,item.emails, item
+        cb null,user.emails, user
 
