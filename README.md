@@ -1,7 +1,7 @@
-[![Build Status](https://travis-ci.org/codedoctor/mongoose-identity-store-multi-tenant.svg?branch=master)](https://travis-ci.org/codedoctor/mongoose-identity-store-multi-tenant)
-[![Coverage Status](https://img.shields.io/coveralls/codedoctor/mongoose-identity-store-multi-tenant.svg)](https://coveralls.io/r/codedoctor/mongoose-identity-store-multi-tenant)
-[![NPM Version](http://img.shields.io/npm/v/mongoose-identity-store-multi-tenant.svg)](https://www.npmjs.org/package/mongoose-identity-store-multi-tenant)
-[![Dependency Status](https://gemnasium.com/codedoctor/mongoose-identity-store-multi-tenant.svg)](https://gemnasium.com/codedoctor/mongoose-identity-store-multi-tenant)
+[![Build Status](https://travis-ci.org/codedoctor/mongoose-user-store-multi-tenant.svg?branch=master)](https://travis-ci.org/codedoctor/mongoose-user-store-multi-tenant)
+[![Coverage Status](https://img.shields.io/coveralls/codedoctor/mongoose-user-store-multi-tenant.svg)](https://coveralls.io/r/codedoctor/mongoose-user-store-multi-tenant)
+[![NPM Version](http://img.shields.io/npm/v/mongoose-user-store-multi-tenant.svg)](https://www.npmjs.org/package/mongoose-user-store-multi-tenant)
+[![Dependency Status](https://gemnasium.com/codedoctor/mongoose-user-store-multi-tenant.svg)](https://gemnasium.com/codedoctor/mongoose-user-store-multi-tenant)
 
 
 TODO:
@@ -13,10 +13,10 @@ TODO:
 * remove expired grants / tokens - expose as function here and run in the server.
 * document
 
-mongoose-identity-store-multi-tenant
+mongoose-user-store-multi-tenant
 ===========================
 
-npm install mongoose-identity-store-multi-tenant
+npm install mongoose-user-store-multi-tenant
 
 A bunch of mongoose schemas to implement identity management (users, accesstokens, oauth apps) in multi tenant scenarios
 
