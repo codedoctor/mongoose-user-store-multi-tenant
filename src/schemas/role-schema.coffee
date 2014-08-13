@@ -1,7 +1,7 @@
 mongoose = require 'mongoose'
 
 module.exports = RoleSchema = new mongoose.Schema
-    accountId:
+    _tenantId:
       type: mongoose.Schema.ObjectId
       require: true
       index : true
@@ -18,4 +18,4 @@ module.exports = RoleSchema = new mongoose.Schema
     strict: true
     collection: 'identitymt.roles'
 
-RoleSchema.index({ accountId: 1,name: 1 },{ unique: true, sparse: false} );
+RoleSchema.index({ _tenantId: 1,name: 1 },{ unique: true, sparse: false} );

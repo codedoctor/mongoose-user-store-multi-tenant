@@ -20,12 +20,12 @@ module.exports = class OrganizationMethods
   constructor:(@models) ->
     throw new Error "models parameter is required" unless @models
 
-  all: (accountId, options = {}, cb = ->) =>
-    return cb new Error "accountId parameter is required." unless accountId
+  all: (_tenantId, options = {}, cb = ->) =>
+    return cb new Error "_tenantId parameter is required." unless _tenantId
 
     settings = 
         baseQuery:
-          accountId : mongooseRestHelper.asObjectId accountId
+          _tenantId : mongooseRestHelper.asObjectId _tenantId
         defaultSort: 'name'
         defaultSelect: null
         defaultCount: 1000
@@ -47,7 +47,7 @@ module.exports = class OrganizationMethods
     settings = {}
     mongooseRestHelper.destroy @models.Organization,organizationId, settings,{}, cb
 
-  getByName: (accountId, name, options = {}, cb = ->) =>
+  getByName: (_tenantId, name, options = {}, cb = ->) =>
     if _.isFunction(options)
       cb = options 
       options = {}
@@ -56,7 +56,7 @@ module.exports = class OrganizationMethods
       return cb err if err
       cb null, item
 
-  getByNameOrId: (accountId, nameOrId, options = {},cb = ->) =>
+  getByNameOrId: (_tenantId, nameOrId, options = {},cb = ->) =>
     if _.isFunction(options)
       cb = options 
       options = {}
@@ -80,9 +80,9 @@ module.exports = class OrganizationMethods
   ###
   Creates a new organization.
   ###
-  create: (accountId, objs = {},options = {}, cb = ->) =>
-    return cb new Error "accountId parameter is required." unless accountId
-    objs.accountId = new ObjectId accountId.toString()
+  create: (_tenantId, objs = {},options = {}, cb = ->) =>
+    return cb new Error "_tenantId parameter is required." unless _tenantId
+    objs._tenantId = new ObjectId _tenantId.toString()
 
     settings = {}
     mongooseRestHelper.create @models.Organization,settings,objs,options,cb

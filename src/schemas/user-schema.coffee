@@ -19,7 +19,7 @@ UserImageSchema = require './user-image-schema'
 
 
 module.exports = UserSchema = new mongoose.Schema
-  accountId:
+  _tenantId:
     type: mongoose.Schema.ObjectId
     require: true
     index: true
@@ -106,8 +106,8 @@ module.exports = UserSchema = new mongoose.Schema
   strict: true
   collection: 'identitymt.users'
 
-UserSchema.index({ accountId: 1,username: 1 },{ unique: true, sparse: false} );
-UserSchema.index({ accountId: 1,primaryEmail: 1 },{ unique: true, sparse: true} );
+UserSchema.index({ _tenantId: 1,username: 1 },{ unique: true, sparse: false} );
+UserSchema.index({ _tenantId: 1,primaryEmail: 1 },{ unique: true, sparse: true} );
 
 UserSchema.plugin pluginTimestamp.timestamps
 UserSchema.plugin pluginDeleteParanoid.deleteParanoid

@@ -22,7 +22,7 @@ OrganizationLinkType =
     type : String
 
 module.exports = OrganizationSchema = new mongoose.Schema
-    accountId:
+    _tenantId:
       type: mongoose.Schema.ObjectId
       require: true
       index: true
@@ -50,7 +50,7 @@ module.exports = OrganizationSchema = new mongoose.Schema
     strict: true
     collection: 'identitymt.organizations'
 
-OrganizationSchema.index({ accountId: 1,name: 1 },{ unique: true, sparse: false} );
+OrganizationSchema.index({ _tenantId: 1,name: 1 },{ unique: true, sparse: false} );
 
 
 OrganizationSchema.plugin pluginTimestamp.timestamps

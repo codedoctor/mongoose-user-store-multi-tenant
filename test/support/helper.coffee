@@ -11,7 +11,7 @@ SampleUsers = require './sample-users'
 
 class Helper
   loggingEnabled: false
-  accountId : '52998e1c32e5724771000009'
+  _tenantId : '52998e1c32e5724771000009'
   database :  'mongodb://localhost/codedoctor-test'
   collections : [
     'identitymt.oauthaccesstokens'

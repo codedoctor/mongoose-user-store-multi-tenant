@@ -26,7 +26,7 @@ describe 'testing scopes', ->
         developerDescription: "ddesc1"
         roles: ['read']
 
-      helper.store.oauthScopes.create helper.accountId, data,{}, (err,result) ->
+      helper.store.oauthScopes.create helper._tenantId, data,{}, (err,result) ->
         return cb err if err
         should.exist result
         result.should.have.property "name","scope1"
@@ -41,7 +41,7 @@ describe 'testing scopes', ->
         developerDescription: "ddesc1"
         roles: ['read']
 
-      helper.store.oauthScopes.create helper.accountId, data,{}, (err,result) ->
+      helper.store.oauthScopes.create helper._tenantId, data,{}, (err,result) ->
         should.exist err
         cb()
 

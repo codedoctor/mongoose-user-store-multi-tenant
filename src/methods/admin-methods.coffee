@@ -22,8 +22,8 @@ module.exports = class AdminMethods
   ###
   Sets up an account ready for use.
   ###
-  setup: (accountId,appName, username, email, password,scopes = [], clientId = null, secret = null,options = {}, cb = ->) =>
-    return cb new Error "accountId parameter is required." unless accountId
+  setup: (_tenantId,appName, username, email, password,scopes = [], clientId = null, secret = null,options = {}, cb = ->) =>
+    return cb new Error "_tenantId parameter is required." unless _tenantId
     return cb new Error "appName parameter is required." unless appName
     return cb new Error "username parameter is required." unless username
     return cb new Error "email parameter is required." unless email
@@ -33,10 +33,10 @@ module.exports = class AdminMethods
       cb = options 
       options = {}
 
-    accountId = new ObjectId accountId.toString()
+    _tenantId = new ObjectId _tenantId.toString()
 
     adminUser =
-      accountId : accountId
+      _tenantId : _tenantId
       username : username
       password : password
       displayName: 'ADMIN'
@@ -45,6 +45,6 @@ module.exports = class AdminMethods
 
     # @TODO Check if user exists, if so, do nothing
 
-    @users.create accountId,adminUser,{}, (err, user) =>
+    @users.create _tenantId,adminUser,{}, (err, user) =>
       return cb err if err
       cb null, user

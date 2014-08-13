@@ -25,7 +25,7 @@ describe 'testing roles', ->
         description: "desc1"
         isInternal : false
 
-      helper.store.roles.create helper.accountId, data,{}, (err,result) ->
+      helper.store.roles.create helper._tenantId, data,{}, (err,result) ->
         return cb err if err
         should.exist result
         result.should.have.property "name","role1"
@@ -39,7 +39,7 @@ describe 'testing roles', ->
         description: "desc1"
         isInternal : false
 
-      helper.store.roles.create helper.accountId, data,{}, (err,result) ->
+      helper.store.roles.create helper._tenantId, data,{}, (err,result) ->
         should.exist err
         cb()
 

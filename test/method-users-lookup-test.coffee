@@ -21,7 +21,7 @@ describe 'WHEN working with store.users.lookup', ->
   describe 'WHEN running against an empty database', ->
     describe 'WHEN invoking lookup', ->
       it 'WITH empty parameters IT should return an empty list', (cb) ->
-        helper.store.users.lookup helper.accountId, "a",{}, (err,result) ->
+        helper.store.users.lookup helper._tenantId, "a",{}, (err,result) ->
           return cb err if err
           should.exist.result
           result.should.have.property "items"
@@ -38,7 +38,7 @@ describe 'WHEN working with store.users.lookup', ->
     ###
   describe 'WHEN invoking lookup', ->
     it 'WITH empty parameters IT should return a full list', (cb) ->
-      helper.store.users.lookup helper.accountId, '',{}, (err,result) ->
+      helper.store.users.lookup helper._tenantId, '',{}, (err,result) ->
         return cb err if err
         should.exist.result
         result.should.have.property "items"
@@ -46,7 +46,7 @@ describe 'WHEN working with store.users.lookup', ->
         cb()
 
     it 'WITH searching for Al IT should return a list of 10 users', (cb) ->
-      helper.store.users.lookup helper.accountId, 'Al',{}, (err,result) ->
+      helper.store.users.lookup helper._tenantId, 'Al',{}, (err,result) ->
         return cb err if err
         should.exist.result
         result.should.have.property "items"
@@ -54,7 +54,7 @@ describe 'WHEN working with store.users.lookup', ->
         cb()
 
     it 'WITH searching for Al and limit 5 IT should return a list of 5 users', (cb) ->
-      helper.store.users.lookup helper.accountId, 'Al',{limit : 5}, (err,result) ->
+      helper.store.users.lookup helper._tenantId, 'Al',{limit : 5}, (err,result) ->
         return cb err if err
         should.exist.result
         result.should.have.property "items"

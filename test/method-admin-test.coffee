@@ -33,14 +33,14 @@ describe 'testing admin', ->
         {"name": "admin", "description": "Allows full admin access to the platform.", "developerDescription": "", "roles": ["admin"]}
       ]
 
-      helper.store.admin.setup helper.accountId,'app1',"martin","password1","martin@wawrusch.com",scopes,null,null,{}, (err,app, user, token,createdScopes) ->
+      helper.store.admin.setup helper._tenantId,'app1',"martin","password1","martin@wawrusch.com",scopes,null,null,{}, (err,app, user, token,createdScopes) ->
         return cb err if err
         should.exist app
         should.exist user
         should.exist token
         should.exist createdScopes
 
-        app.should.have.property "accountId" # "52998e1c32e5724771000009"
+        app.should.have.property "_tenantId" # "52998e1c32e5724771000009"
         app.should.have.property "name","app1"
         app.should.have.property "createdAt"
         app.should.have.property "updatedAt"

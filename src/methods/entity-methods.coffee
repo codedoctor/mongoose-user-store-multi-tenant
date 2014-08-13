@@ -33,31 +33,31 @@ module.exports = class EntityMethods
   ###
   @TODO resthelper implementation
   ###
-  getByName: (accountId,name,options = {}, cb = ->) =>
+  getByName: (_tenantId,name,options = {}, cb = ->) =>
     if _.isFunction(options)
       cb = options 
       options = {}
 
-    accountId = new ObjectId accountId.toString()
-    @models.User.findOne {accountId : accountId, username: name} , (err, item) =>
+    _tenantId = new ObjectId _tenantId.toString()
+    @models.User.findOne {_tenantId : _tenantId, username: name} , (err, item) =>
       return cb err if err
       return cb null, item if item
-      @models.Organization.findOne {accountId : accountId,name: name }, (err, item) =>
+      @models.Organization.findOne {_tenantId : _tenantId,name: name }, (err, item) =>
         return cb err if err
         cb null, item
 
   ###
   @TODO resthelper implementation
   ###
-  getByNameOrId: (accountId,nameOrId, options = {},cb = ->) =>
+  getByNameOrId: (_tenantId,nameOrId, options = {},cb = ->) =>
     if _.isFunction(options)
       cb = options 
       options = {}
 
-    accountId = new ObjectId accountId.toString()
+    _tenantId = new ObjectId _tenantId.toString()
 
     if isObjectId(nameOrId)
       @get nameOrId, options, cb
     else
-      @getByName accountId,nameOrId, options, cb
+      @getByName _tenantId,nameOrId, options, cb
 

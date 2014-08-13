@@ -11,12 +11,12 @@ module.exports = class RoleMethods
 
   constructor:(@models) ->
 
-  all: (accountId,options = {},cb = ->) =>
-    return cb new Error "accountId parameter is required." unless accountId
+  all: (_tenantId,options = {},cb = ->) =>
+    return cb new Error "_tenantId parameter is required." unless _tenantId
 
     settings = 
         baseQuery:
-          accountId : mongooseRestHelper.asObjectId accountId
+          _tenantId : mongooseRestHelper.asObjectId _tenantId
         defaultSort: 'name'
         defaultSelect: null
         defaultCount: 1000
@@ -42,10 +42,10 @@ module.exports = class RoleMethods
   ###
   Create a new role.
   ###
-  create:(accountId,objs = {}, options = {}, cb = ->) =>
-    return cb new Error "accountId parameter is required." unless accountId
+  create:(_tenantId,objs = {}, options = {}, cb = ->) =>
+    return cb new Error "_tenantId parameter is required." unless _tenantId
     settings = {}
-    objs.accountId = new ObjectId accountId.toString()
+    objs._tenantId = new ObjectId _tenantId.toString()
     mongooseRestHelper.create @models.Role,settings,objs,options,cb
 
 
