@@ -716,10 +716,7 @@ module.exports = class UserMethods
       user.resetPasswordToken =
         token: newToken
         validTill : (new Date()).add( days : 1)
-      console.log "E"
       user.save (err) =>
-        console.log "F"
-        console.log "G"
         cb null,user,newToken
 
   #p0qEeKBoh25031326eefa65c0000000006TWlhZKbLjn
