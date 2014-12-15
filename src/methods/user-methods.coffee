@@ -371,6 +371,8 @@ module.exports = class UserMethods
       cb = options 
       options = {}
 
+    options.roles = ['user-needs-setup'] unless _.isArray(options.roles)
+
     _tenantId = mongooseRestHelper.asObjectId _tenantId
 
     identityQuery =
@@ -544,7 +546,7 @@ module.exports = class UserMethods
           user.timezone = profile._json?.timezone
           user.locale = profile._json?.locale
           user.verified = profile._json?.verified
-          user.roles = ['user-needs-setup']
+          user.roles = options.roles
 
           newIdentity = #new @models.UserIdentity
             provider: provider
