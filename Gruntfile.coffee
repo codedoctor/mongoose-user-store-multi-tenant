@@ -46,6 +46,9 @@ module.exports = (grunt) ->
           require: 'coffee-script/register'
         src: ['test/**/*-tests.coffee']
 
+    release:
+      options: {}
+      
     mochacov:
       options:
         coveralls:

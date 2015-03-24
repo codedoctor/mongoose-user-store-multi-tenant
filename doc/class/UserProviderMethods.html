@@ -19,39 +19,33 @@
       Index
     </a>
     &raquo;
-    <span class='title'>AdminMethods</span>
+    <span class='title'>UserProviderMethods</span>
   </div>
 </div>
     <div id='content'>
       <h1>
         Class:
-        AdminMethods
+        UserProviderMethods
       </h1>
       <table class='box'>
         <tr>
           <td>Defined in:</td>
-          <td>src&#47;methods&#47;admin-methods.coffee</td>
+          <td>src&#47;methods&#47;user-provider-methods.coffee</td>
         </tr>
       </table>
-      <h2>Overview</h2>
-      <div class='docstring'>
-  <p>Provides methods to set up admin users.</p>
-</div>
-<div class='tags'>
-</div>
       <h2>Instance Method Summary</h2>
       <ul class='summary'>
   <li>
     <span class='signature'>
-      <a href='#setup-dynamic'>
+      <a href='#getUserFromProvider-dynamic'>
         #
 (void)
-<b>setup</b><span>(_tenantId, username, email, password, roles, options = {}, cb = function() {})</span>
+<b>getUserFromProvider</b><span>(_tenantId, provider, key, options = {}, cb = function() {})</span>
       </a>
     </span>
     <span class='bound note title'>Bound</span>
     <span class='desc'>
-      Sets up an account ready for use. 
+      Gets or creates a user for a given provider/profile combination. 
     </span>
   </li>
 </ul>
@@ -61,7 +55,7 @@
     <p class='signature' id='constructor-dynamic'>
       #
 (void)
-<b>constructor</b><span>(models, userMethods)</span>
+<b>constructor</b><span>(models)</span>
       <br>
     </p>
     <div class='docstring'>
@@ -87,17 +81,60 @@
       <h2>Instance Method Details</h2>
       <div class='methods'>
   <div class='method_details'>
-    <p class='signature' id='setup-dynamic'>
+    <p class='signature' id='getUserFromProvider-dynamic'>
       #
 (void)
-<b>setup</b><span>(_tenantId, username, email, password, roles, options = {}, cb = function() {})</span>
+<b>getUserFromProvider</b><span>(_tenantId, provider, key, options = {}, cb = function() {})</span>
       <span class='bound note'>Bound</span>
       <br>
     </p>
     <div class='docstring'>
-  <p>Sets up an account ready for use.</p>
+  <p>Gets or creates a user for a given provider/profile combination.</p>
 </div>
 <div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>provider</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>a provider string like &quot;facebook&quot; or &quot;twitter&quot;. </span>
+    </li>
+    <li>
+      <span class='name'>v1</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>the key or access_token, depending on the type of provider </span>
+    </li>
+    <li>
+      <span class='name'>v2</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>the secret or refresh_token, depending on the type of provider </span>
+    </li>
+    <li>
+      <span class='name'>profile</span>
+      <span class='type'>
+        (
+          <tt>Object</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>The profile as defined here: <a href="http://passportjs.org/guide/user-profile.html">http://passportjs.org/guide/user-profile.html</a> </span>
+    </li>
+  </ul>
 </div>
   </div>
 </div>

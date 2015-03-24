@@ -29,7 +29,7 @@ module.exports =
   errorUsernameRequired: "The required parameter 'username' is missing."
   errorV1Required: "The required parameter 'v1' is missing."
   errorValidTillFailed: "The supplied token is expired."
-
+  errorKeyRequired: "The required parameter 'key' is missing."
   prefixErrorForbiddenForOrganization: "You lack the credentials to access organization"
   prefixErrorCouldNotFindUser: "Could not find user with"
   prefixErrorCouldNotFindOrganization: "Could not find organization with"

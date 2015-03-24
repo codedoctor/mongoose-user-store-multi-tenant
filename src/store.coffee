@@ -15,6 +15,7 @@ EntityMethods = require './methods/entity-methods'
 OrganizationMethods = require './methods/organization-methods'
 RoleMethods = require './methods/role-methods'
 UserMethods = require './methods/user-methods'
+UserProviderMethods = require './methods/user-provider-methods'
 
 module.exports = class Store
 
@@ -54,5 +55,6 @@ module.exports = class Store
     @organizations = new OrganizationMethods @models
     @roles = new RoleMethods @models
     @users = new UserMethods @models
+    @userProviders = new UserProviderMethods @models
     @admin = new AdminMethods @models, @users, @oauthApps, @oauthAuth,@oauthScopes
 
