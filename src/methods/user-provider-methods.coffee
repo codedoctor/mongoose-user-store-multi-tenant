@@ -6,6 +6,9 @@ mongooseRestHelper = require 'mongoose-rest-helper'
 
 i18n = require '../i18n'
 
+###
+Provides methods that deal with the provider related part of a user.
+###
 module.exports = class UserProviderMethods
 
   ###

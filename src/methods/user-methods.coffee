@@ -662,7 +662,7 @@ module.exports = class UserMethods
   addRoles:(userId,roles,options = {},cb = ->) =>
     roles = [roles] if _.isString(roles)
 
-    return cb Boom.badRequest( i18n.errorUserIdRequired) unless email
+    return cb Boom.badRequest( i18n.errorUserIdRequired) unless userId
     return cb Boom.badRequest( i18n.errorRolesRequired) unless roles && _.isArray(roles) && roles.length > 0
 
     if _.isFunction(options)
@@ -682,7 +682,7 @@ module.exports = class UserMethods
   removeRoles:(userId,roles,options = {},cb = ->) =>
     roles = [roles] if _.isString(roles)
 
-    return cb Boom.badRequest( i18n.errorUserIdRequired) unless email
+    return cb Boom.badRequest( i18n.errorUserIdRequired) unless userId
     return cb Boom.badRequest( i18n.errorRolesRequired) unless roles && _.isArray(roles) && roles.length > 0
 
     if _.isFunction(options)
